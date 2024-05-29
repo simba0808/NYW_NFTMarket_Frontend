@@ -1,0 +1,126 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer globals {
+  :root {
+    --color-dark-violet: #060925;
+    --color-cream: #E4E3B9;
+    --color-light-gray: #E9F2F6;
+    --color-gray: #CBD5E0;
+    --color-medium-gray: #8E9FAE;
+    --color-pale-magenta: #FEB8FF;
+    --color-dark-magenta: #955693;
+    --color-violet: #892DFF;
+    --color-mint: #9EE1DD;
+    --color-strong-cyan: #2ECCB4;
+    --color-dark-blue: #3840FF;
+    --color-darker-blue: #2622ab;
+
+    --toastify-font-family: 'Inter', sans-serif;
+    font-weight: 300;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    font-feature-settings: 'calt' off;
+  }
+
+  h2 {
+    font-size: 42px !important;
+    font-weight: 700 !important;
+  }
+  h2 p {
+    font-size: 84px;
+    line-height: 100%;
+    color: #15BFFD;
+    font-weight: 800;
+    text-shadow: 
+      1px  1px     #fff, 
+      -1px  1px     #fff, 
+      1px -1px     #fff, 
+      -1px -1px     #fff,
+      1px  1px 5px #555;
+  }
+
+  .page-bg {
+    background-color: var(--color-dark-violet);
+    display: flex;
+    flex-wrap: wrap;
+    min-height: 100vh;
+    align-content: space-between;
+  }
+
+  .header__wrapper {
+    background-color: var(--color-dark-violet);
+    width: 100%;
+    position: fixed;
+    z-index: 900;
+    top: 0;
+  }
+
+  .header__container {
+    margin: 0 auto;
+    width: 100%;
+    max-width: calc(1576px - 30px);
+    padding: 10px 15px;
+    background-color: var(--primary-color);
+    transition: .3s;
+    color: white;
+  }
+
+  .footer__wrapper {
+    margin: 0 auto;
+    width: 100%;
+    max-width: calc(1576px - 30px);
+    padding: 10px 15px;
+  }
+
+  .footer__container {
+    margin: 0 auto;
+    width: 100%;
+    max-width: calc(1576px - 30px);
+    padding: 10px 15px;
+    background-color: var(--primary-color);
+    transition: .3s;
+    color: white;
+  }
+
+  .container {
+    margin: 0 auto;
+    width: 100%;
+    max-width: calc(1576px - 30px);
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .main-pt {
+    width: 100%;
+    padding-top: 100px;
+  }
+
+  @layer components {
+    .btn {
+      background-image: url("/whitebutton.png");
+      background-repeat: no-repeat;  
+      background-position: 0% 0%;
+      background-size: 100% 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .btn:hover {
+      background-image: url("/bluebutton.png");
+      color: #060925;
+      cursor: pointer;
+    }
+  }
+
+  @layer utilities {
+  
+  }
+}
