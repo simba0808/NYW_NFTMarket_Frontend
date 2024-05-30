@@ -1,16 +1,21 @@
-import { Link } from "@nextui-org/link";
-import { Snippet } from "@nextui-org/snippet";
-import { Code } from "@nextui-org/code";
-import { button as buttonStyles } from "@nextui-org/theme";
-
-import { siteConfig } from "@/lib/config/site";
-import { title, subtitle } from "@/lib/components/primitives";
-import { GithubIcon } from "@/lib/components/icons";
+import HeroSection from "@/lib/components/landing/HeroSection";
+import ShowcaseSection from "@/lib/components/landing/ShowcaseSection";
+import CompanySection from "@/lib/components/landing/CompanySection";
+import CampaignSection from "@/lib/components/landing/CampaignSection";
+import HighlightSection from "@/lib/components/landing/HighlightSection";
+import RoadmapSection from "@/lib/components/landing/RoadmapSection";
+import FeedbackSection from "@/lib/components/landing/FeedbackSection";
 
 export default function Home() {
   return (
-    <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
-      
+    <section className="text-white">
+      <HeroSection />
+      <ShowcaseSection />
+      <CompanySection />
+      <CampaignSection />
+      <HighlightSection />
+      <RoadmapSection />
+      <FeedbackSection />
     </section>
   );
 }

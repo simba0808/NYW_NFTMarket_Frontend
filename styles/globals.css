@@ -118,9 +118,31 @@
       color: #060925;
       cursor: pointer;
     }
+
+    .roadmap-card {
+      background-image: linear-gradient(to left, #6dbfddda 10%, #6dbfdd46 20%, #6dbfdd00 30%);
+      border-radius: 0.5rem;
+    }
+
+    .roadmap-left-card {
+      background-image: linear-gradient(to right, #6dbfddda 10%, #6dbfdd46 20%, #6dbfdd00 30%);
+      border-radius: 0.5rem;
+    }
+
+
+    .place-center {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translateX(-50%) translateY(-50%);
+    }
   }
 
   @layer utilities {
-  
+    .card-gradient {
+      border-radius: 0.5rem;
+      border: 1px solid rgba(55, 65, 81, 0.3);
+      background: linear-gradient(to right, rgba(55, 65, 81, 0.5), rgba(55, 65, 81, 0.1));
+    }
   }
 }
