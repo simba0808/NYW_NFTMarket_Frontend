@@ -21,8 +21,8 @@ const NFTShowcaseCard: FC<Props> = ({ asset, avatar, nftName, nftOwner, price })
         <div className="flex py-3">
           <img src={`/asset/${avatar}`} alt="Not Found" />
           <div className="ml-3">
-            <p className="text-[18px] font-semibold">{nftName}</p>
-            <p className="text-[12px]">By @{nftOwner}</p>
+            <p className="font-large">{nftName}</p>
+            <p>By @{nftOwner}</p>
           </div>
         </div>
         <div className="py-3">
