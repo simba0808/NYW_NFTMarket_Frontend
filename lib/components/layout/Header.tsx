@@ -23,16 +23,16 @@ export default function Header() {
           <header className="flex flex-row items-center justify-between">
             {logoElement}
             <ul className="hidden md:flex items-center justify-between gap-[28px]">
-              <li onClick={() => router.push("/explore")}>
+              <li role="button" tabIndex={0} onClick={() => router.push("/explore")}>
                 <span>Explorer NFT</span>
               </li>
-              <li onClick={() => router.push("/create")}>
+              <li role="button" tabIndex={0} onClick={() => router.push("/create")}>
                 <span>Create NFT</span>
               </li>
-              <li onClick={() => router.push("/earn")}>
+              <li role="button" tabIndex={0} onClick={() => router.push("/earn")}>
                 <span>EARN</span>
               </li>
-              <li onClick={() => router.push("/campaign")}>
+              <li role="button" tabIndex={0} onClick={() => router.push("/campaign")}>
                 <span>Campaigns</span>
               </li>
             </ul>

@@ -12,7 +12,7 @@ export default function Footer() {
 
   const logoElement = useMemo(() => {
     return (
-      <img src="/logo.png" className="hover:cursor-pointer" onClick={onLogo} alt="Not Found" />
+      <img src="/logo.png" role="button" tabIndex={0} className="hover:cursor-pointer" onClick={onLogo} alt="Not Found" />
     );
   }, []);
 
