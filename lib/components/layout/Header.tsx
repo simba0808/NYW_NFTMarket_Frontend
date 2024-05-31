@@ -38,7 +38,7 @@ export default function Header() {
             </ul>
             <div className="relative w-32 md:w-40">
               <img src="/bluebutton.png" alt="Not Found" />
-              <span className="place-center z-10 w-full text-center">Connect Wallet</span>
+              <button className="place-center z-10 w-full text-center" onClick={() => router.push("/signin")}>Get Started</button>
             </div>
           </header>
         </div>
