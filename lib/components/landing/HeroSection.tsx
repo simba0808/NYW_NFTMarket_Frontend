@@ -1,10 +1,10 @@
 const HeroStatus = ({ icon, state, text }: { icon: string; state: string; text: string }) => {
   return (
     <div className="flex">
-      <img src={icon} alt="Not Found" />
-      <div className="ml-3">
-        <p className="text-[32px] leading-[100%]">{state}</p>
-        <p className="text-[20px]">{text}</p>
+      <img className="w-10 h-10 lg:w-20 lg:h-20" src={icon} alt="Not Found" />
+      <div className="ml-3 flex flex-col justify-between">
+        <p className="text-[18px] lg:text-[32px] font-semibold leading-[100%]">{state}</p>
+        <p className="text-[10px] lg:text-[20px]">{text}</p>
       </div>
     </div>
   );
@@ -18,7 +18,7 @@ export default function HeroSection() {
         <div className="flex flex-col lg:flex-row flex-wrap py-4">
           <div className="flex-[50%] flex items-center">
             <div>
-              <h2>Diversity & Technology in <p>New York World</p></h2>
+              <h2 className="">Diversity & Technology in <p className="lg:">New York World</p></h2>
               <p className="mt-4 mb-8">
                 Ever dreamt of being part of the New York World? 
                 NYW, the bridge between Blockchain and AI, lets you own a piece of the action. 
@@ -31,7 +31,7 @@ export default function HeroSection() {
             <img src="/state.png" className="float-right" alt="Not Found" />
           </div>
         </div>
-        <div className="flex justify-between bg-white/5 rounded-md py-6 px-10">
+        <div className="grid grid-cols-2 lg:grid-cols-4 justify-items-stretch gap-y-4 bg-white/5 rounded-md p-4 lg:py-6 lg:px-10">
           <HeroStatus icon="/total.svg" state="9526" text="Total Items" />
           <HeroStatus icon="/users.svg" state="1420" text="Total Owners" />
           <HeroStatus icon="/floor.svg" state="0.50" text="Floor Price" />

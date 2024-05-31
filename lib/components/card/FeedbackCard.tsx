@@ -10,7 +10,7 @@ export default function FeedbackCard({creator, role, avatar}: {creator: string; 
               return (
                 <Icon
                   key={item}
-                  className="text-lg sm:text-xl text-[#15BFFD]"
+                  className="text-lg sm:text-xl text-light-blue"
                   icon="solar:star-bold"
                 />
               )
@@ -23,8 +23,8 @@ export default function FeedbackCard({creator, role, avatar}: {creator: string; 
         </p>
         <div className="flex justify-between">
           <div className="text-left">
-            <p className="font-semibold">{creator}</p>
-            <p className="text-[12px]">{role}</p>
+            <p className="font-medium">{creator}</p>
+            <p>{role}</p>
           </div>
           <img className="!w-10 !h-10" src={avatar} alt="Not Found" />
         </div>
