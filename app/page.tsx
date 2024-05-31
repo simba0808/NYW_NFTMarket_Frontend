@@ -5,17 +5,25 @@ import CampaignSection from "@/lib/components/landing/CampaignSection";
 import HighlightSection from "@/lib/components/landing/HighlightSection";
 import RoadmapSection from "@/lib/components/landing/RoadmapSection";
 import FeedbackSection from "@/lib/components/landing/FeedbackSection";
+import Header from "@/lib/components/layout/Header";
+import Footer from "@/lib/components/layout/Footer";
 
 export default function Home() {
   return (
-    <section className="text-white">
-      <HeroSection />
-      <ShowcaseSection />
-      <CompanySection />
-      <CampaignSection />
-      <HighlightSection />
-      <RoadmapSection />
-      <FeedbackSection />
-    </section>
+    <div className="page-bg">
+      <Header />
+      <main className="main-pt">
+        <section className="text-white">
+          <HeroSection />
+          <ShowcaseSection />
+          <CompanySection />
+          <CampaignSection />
+          <HighlightSection />
+          <RoadmapSection />
+          <FeedbackSection />
+        </section>
+      </main>
+      <Footer />
+    </div>
   );
 }

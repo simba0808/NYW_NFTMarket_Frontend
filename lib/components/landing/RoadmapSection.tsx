@@ -1,10 +1,10 @@
 const RoadmapCard = ({ title, content, direction }: { title: string; content: string; direction: boolean }) => {
   return (
     <div className={`p-1 ${!direction ? "roadmap-card" : "roadmap-left-card"}`}>
-      <div className="p-2 rounded-[0.5rem] bg-[#060925]">
+      <div className="p-2 rounded-[0.5rem] bg-dark-blue">
         <div className={`p-4 rounded-[0.5rem] border border-gray-700/30 bg-gradient-to-r from-gray-700/50 to-gray-700/10 text-left`}>
-          <p className="text-[20px] lg:text-[24px] font-bold">{title}</p>
-          <p className="text-[12px]">{content}</p>
+          <p className="font-large">{title}</p>
+          <p className="font-small">{content}</p>
         </div>
       </div>
     </div>
