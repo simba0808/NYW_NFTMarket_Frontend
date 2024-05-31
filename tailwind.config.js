@@ -14,6 +14,9 @@ module.exports = {
         sans: ["var(--font-sans)"],
         mono: ["var(--font-geist-mono)"],
       },
+      colors: {
+        'light-blue': 'var(--color-light-blue)',
+      }
     },
   },
   darkMode: "class",

@@ -3,10 +3,18 @@ const RoadmapCard = ({ title, content, direction }: { title: string; content: st
     <div className={`p-1 ${!direction ? "roadmap-card" : "roadmap-left-card"}`}>
       <div className="p-2 rounded-[0.5rem] bg-[#060925]">
         <div className={`p-4 rounded-[0.5rem] border border-gray-700/30 bg-gradient-to-r from-gray-700/50 to-gray-700/10 text-left`}>
-          <p className="text-[24px] font-bold">{title}</p>
-          <p>{content}</p>
+          <p className="text-[20px] lg:text-[24px] font-bold">{title}</p>
+          <p className="text-[12px]">{content}</p>
         </div>
       </div>
+    </div>
+  );
+}
+
+const RoadmapCardContainer = () => {
+  return (
+    <div>
+
     </div>
   );
 }
@@ -22,76 +30,76 @@ export default function RoadmapSection() {
         <p>The largest and unique Super rare NFT marketplace For crypto-collectibles</p>
         <div className="relative mt-10">
           <div className="relative">
-            <div className="flex w-1/2">
+            <div className="flex lg:w-1/2">
               <div className="w-[80%]">
                 <RoadmapCard title="Brief" content={contents[0]} direction={false} />
               </div>
               <div className="w-[20%] flex items-center">
-                <img className="w-full" src="/arrowlineleft.svg" />
+                <img className="hidden lg:block w-full" src="/arrowlineleft.svg" />
               </div>
             </div>
-            <div className="place-center w-6 h-6 rounded-full bg-[#15BFFD]">
+            <div className="hidden lg:block place-center w-6 h-6 rounded-full bg-light-blue">
             </div>
           </div>
-          <div className="relative flex justify-end -translate-y-[50%]">
-            <div className="flex w-1/2">
+          <div className="relative flex justify-end lg:-translate-y-[50%]">
+            <div className="flex lg:w-1/2">
               <div className="w-[20%] flex items-center">
-                <img className="w-full" src="/arrowlineright.svg" />
+                <img className="hidden lg:block w-full" src="/arrowlineright.svg" />
               </div>
               <div className="w-[80%]">
                 <RoadmapCard title="Research" content={contents[0]} direction={true} />
               </div>
             </div>
-            <div className="place-center w-6 h-6 rounded-full bg-[#15BFFD]">
+            <div className="hidden lg:block place-center w-6 h-6 rounded-full bg-light-blue">
             </div>
-            <div className="place-center h-full w-[4px] bg-[#15BFFD]"></div>
+            <div className="hidden lg:block place-center h-full w-[4px] bg-light-blue"></div>
           </div>
-          <div className="relative -translate-y-[50%]">
-            <div className="flex w-1/2">
+          <div className="relative lg:-translate-y-[50%]">
+            <div className="flex lg:w-1/2">
               <div className="w-[80%]">
                 <RoadmapCard title="Discover" content={contents[0]} direction={false} />
               </div>
               <div className="w-[20%] flex items-center">
-                <img className="w-full" src="/arrowlineleft.svg" />
+                <img className="hidden lg:block w-full" src="/arrowlineleft.svg" />
               </div>
             </div>
-            <div className="place-center w-6 h-6 rounded-full bg-[#15BFFD]"></div>
-            <div className="place-center h-full w-[4px] bg-[#15BFFD]"></div>
+            <div className="hidden lg:block place-center w-6 h-6 rounded-full bg-light-blue"></div>
+            <div className="hidden lg:block place-center h-full w-[4px] bg-light-blue"></div>
           </div>
-          <div className="relative flex justify-end -translate-y-[100%]">
-            <div className="flex w-1/2">
+          <div className="relative flex justify-end lg:-translate-y-[100%]">
+            <div className="flex lg:w-1/2">
               <div className="w-[20%] flex items-center">
-                <img className="w-full" src="/arrowlineright.svg" />
+                <img className="hidden lg:block w-full" src="/arrowlineright.svg" />
               </div>
               <div className="w-[80%]">
                 <RoadmapCard title="Design" content={contents[0]} direction={true} />
               </div>
             </div>
-            <div className="place-center w-6 h-6 rounded-full bg-[#15BFFD]"></div>
-            <div className="place-center h-full w-[4px] bg-[#15BFFD]"></div>
+            <div className="hidden lg:block place-center w-6 h-6 rounded-full bg-light-blue"></div>
+            <div className="hidden lg:block place-center h-full w-[4px] bg-light-blue"></div>
           </div>
-          <div className="relative -translate-y-[100%]">
-            <div className="flex w-1/2">
+          <div className="relative lg:-translate-y-[100%]">
+            <div className="flex lg:w-1/2">
               <div className="w-[80%]">
                 <RoadmapCard title="Testing" content={contents[0]} direction={false} />
               </div>
               <div className="w-[20%] flex items-center">
-                <img className="w-full" src="/arrowlineleft.svg" />
+                <img className="hidden lg:block w-full" src="/arrowlineleft.svg" />
               </div>
             </div>
-            <div className="place-center w-6 h-6 rounded-full bg-[#15BFFD]"></div>
-            <div className="place-center h-full w-[4px] bg-[#15BFFD]"></div>
+            <div className="hidden lg:block place-center w-6 h-6 rounded-full bg-light-blue"></div>
+            <div className="hidden lg:block place-center h-full w-[4px] bg-light-blue"></div>
           </div>
-          <div className="relative flex justify-end -translate-y-[150%]">
-            <div className="flex w-1/2">
+          <div className="relative flex justify-end lg:-translate-y-[150%]">
+            <div className="flex lg:w-1/2">
               <div className="w-[20%] flex items-center">
-                <img className="w-full" src="/arrowlineright.svg" />
+                <img className="hidden lg:block w-full" src="/arrowlineright.svg" />
               </div>
               <div className="w-[80%]">
                 <RoadmapCard title="Launch & Feedback" content={contents[0]} direction={true} />
               </div>
             </div>
-            <div className="place-center w-6 h-6 rounded-full bg-[#15BFFD]"></div>
+            <div className="hidden lg:block place-center w-6 h-6 rounded-full bg-light-blue"></div>
           </div>
         </div>
       </div>

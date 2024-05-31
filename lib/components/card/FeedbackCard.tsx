@@ -10,7 +10,7 @@ export default function FeedbackCard({creator, role, avatar}: {creator: string; 
               return (
                 <Icon
                   key={item}
-                  className="text-lg sm:text-xl text-[#15BFFD]"
+                  className="text-lg sm:text-xl text-light-blue"
                   icon="solar:star-bold"
                 />
               )

@@ -21,8 +21,8 @@ export default function Header() {
       <div className="header__container">
         <header className="flex flex-row items-center justify-between">
           {logoElement}
-          <ul className="flex items-center justify-between gap-[28px]">
-            <li onClick={() => router.push("/find")}>
+          <ul className="hidden md:flex items-center justify-between gap-[28px]">
+            <li onClick={() => router.push("/explore")}>
               <span>Explorer NFT</span>
             </li>
             <li onClick={() => router.push("/create")}>
@@ -35,9 +35,9 @@ export default function Header() {
               <span>Campaigns</span>
             </li>
           </ul>
-          <div className="relative ">
+          <div className="relative w-32 md:w-40">
             <img src="/bluebutton.png" alt="Not Found" />
-            <span className="z-10 w-full absolute top-1/2 left-1/2 -translate-x-[50%] -translate-y-[50%] text-center">Connect Wallet</span>
+            <span className="place-center z-10 w-full text-center text-[12px]">Connect Wallet</span>
           </div>
         </header>
       </div>

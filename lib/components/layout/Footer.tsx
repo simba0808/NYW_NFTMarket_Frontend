@@ -40,27 +40,27 @@ export default function Footer() {
                   <span><img src="/socials/youtube.svg" alt="Not Found" /></span> 
                 </div>
               </div>
-              <div className="flex justify-between lg:gap-10 text-[12px] lg:text-[14px]">
-                <ul className="flex flex-col gap-4">
+              <div className="flex justify-between lg:gap-10 text-[10px] lg:text-[14px]">
+                <ul className="flex flex-col gap-2 lg:gap-4">
                   <li className="text-[14px] lg:text-[20px] font-bold">Marketplace</li>
-                  <li><Link href="/find" />Explore</li>
-                  <li><Link href="/find" />Create</li>
-                  <li><Link href="/find" />Earn</li>
-                  <li><Link href="/find" />Campaign</li>
+                  <li><Link href="/explore" />Explore</li>
+                  <li><Link href="/explore" />Create</li>
+                  <li><Link href="/explore" />Earn</li>
+                  <li><Link href="/explore" />Campaign</li>
                 </ul>
-                <ul className="flex flex-col gap-4">
+                <ul className="flex flex-col gap-2 lg:gap-4">
                   <li className="text-[14px] lg:text-[20px] font-bold">Partnership</li>
-                  <li><Link href="/find" />Giveaway Collaboration</li>
-                  <li><Link href="/find" />Art Theme Collaboration</li>
-                  <li><Link href="/find" />Apply for Mod</li>
-                  <li><Link href="/find" />Apply for Ambassador</li>
+                  <li><Link href="/explore" />Giveaway Collaboration</li>
+                  <li><Link href="/explore" />Art Theme Collaboration</li>
+                  <li><Link href="/explore" />Apply for Mod</li>
+                  <li><Link href="/explore" />Apply for Ambassador</li>
                 </ul>
-                <ul className="flex flex-col gap-4">
+                <ul className="flex flex-col gap-2 lg:gap-4">
                   <li className="text-[14px] lg:text-[20px] font-bold">Resources</li>
-                  <li><Link href="/find" />NFP Documentation</li>
-                  <li><Link href="/find" />Logo</li>
-                  <li><Link href="/find" />Terms of Service</li>
-                  <li><Link href="/find" />Privacy Policy</li>
+                  <li><Link href="/explore" />NFP Documentation</li>
+                  <li><Link href="/explore" />Logo</li>
+                  <li><Link href="/explore" />Terms of Service</li>
+                  <li><Link href="/explore" />Privacy Policy</li>
                 </ul>
               </div>
               <div className="max-w-[400px] flex flex-col justify-center gap-4">
@@ -68,14 +68,14 @@ export default function Footer() {
                 <p className="text-[14px]">Join our mailing list to stay in the loop with our newest feature releases, NFT drops, and tips and tricks for navigating NFTs.</p>
                 <div className="relative flex rounded-md">
                   <div className="rounded-l-md p-2 bg-white/10">
-                    <input type="email" className="border-none outline-none bg-transparent" placeholder="Enter your email address" /> 
+                    <input type="email" className="text-[12px] lg:text-[20px] border-none outline-none bg-transparent" placeholder="Enter your email address" /> 
                   </div>
-                  <div className="inset-0 bg-[#15BFFD] rounded-r-md flex items-center px-2">SUBSCRIBE</div>
+                  <div className="text-[12px] lg:text-[20px] inset-0 bg-light-blue rounded-r-md flex items-center px-2">SUBSCRIBE</div>
                 </div>
               </div>
             </div>
             <div className="w-full h-[1px] my-3 bg-white/10"></div>
-            <p className="text-center text-[#727483]">Copyright ©2024NYWC. All rights reserved.</p>
+            <p className="text-[12px] lg:text-[16px] text-center text-[#727483]">Copyright ©2024NYWC. All rights reserved.</p>
           </footer>
         </div>
       </div>
