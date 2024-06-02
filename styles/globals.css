@@ -224,5 +224,8 @@
       border: 1px solid rgba(55, 65, 81, 0.3);
       background: linear-gradient(to right, rgba(55, 65, 81, 0.5), rgba(55, 65, 81, 0.1));
     }
+    .prompt-container p {
+      font-size: 12px;
+    }
   }
 }
