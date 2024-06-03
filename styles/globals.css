@@ -146,6 +146,23 @@
       cursor: pointer;
     }
 
+    .btn-reverse {
+      background-image: url("/bluebutton.png");
+      color: #060925;
+      background-repeat: no-repeat;  
+      background-position: 0% 0%;
+      background-size: 100% 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .btn-reverse:hover {
+      cursor: pointer;
+      background-image: url("/whitebutton.png");
+      color: white;
+    }
+
     .roadmap-card {
       background-image: linear-gradient(to left, #6dbfddda 10%, #6dbfdd46 20%, #6dbfdd00 30%);
       border-radius: 0.5rem;

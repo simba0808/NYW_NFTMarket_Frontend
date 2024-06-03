@@ -1,6 +1,7 @@
 "use client";
 import { useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
+import PrimaryButton from "../button/PrimaryButton";
 
 export default function Header() {
   const router = useRouter();
@@ -36,10 +37,7 @@ export default function Header() {
                 <span>Campaigns</span>
               </li>
             </ul>
-            <div className="relative w-32 md:w-40">
-              <img src="/bluebutton.png" alt="Not Found" />
-              <button className="place-center z-10 w-full text-center" onClick={() => router.push("/signin")}>Get Started</button>
-            </div>
+            <PrimaryButton text="Get Started" className="w-32 md:w-40" onClick={() => router.push("/signin")} varient="secondary" />
           </header>
         </div>
       </div>
