@@ -1,4 +1,7 @@
+"use client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+
 import PrimaryButton from "@/lib/components/button/PrimaryButton";
 
 const HeroStatus = ({ icon, state, text }: { icon: string; state: string; text: string }) => {
@@ -14,7 +17,8 @@ const HeroStatus = ({ icon, state, text }: { icon: string; state: string; text: 
 };
 
 export default function HeroSection() {
-  
+  const router = useRouter();
+
   return (
     <section className="">
       <div className="container">
@@ -27,9 +31,13 @@ export default function HeroSection() {
                 NYW, the bridge between Blockchain and AI, lets you own a piece of the action. 
                 Generate and mint NFTs, unlocking the future of creativity in the heart of the world.
               </p>
-              <div className="flex items-center gap-10">
-                <PrimaryButton text="Join Us" className="w-[200px]" />
-                <Link href="https://web.telegram.org/" className="text-lg text-light-blue font-medium underline underline-offset-4 uppercase">Join Community</Link>
+              <div className="flex flex-col lg:flex-row items-center gap-4 lg:gap-8">
+                <PrimaryButton 
+                  text="Get Started" 
+                  className="w-[200px]" 
+                  onClick={() => router.push("/explore")} 
+                />
+                <Link href="https://web.telegram.org/" className="text-[16px] text-light-blue font-medium underline underline-offset-4 uppercase">Join Community</Link>
               </div>
             </div>
           </div>
