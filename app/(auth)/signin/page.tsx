@@ -1,24 +1,27 @@
 "use client";
 
 import React, { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { signIn, useSession } from "next-auth/react";
 import {Button, Input, Link, Divider, User, Checkbox} from "@nextui-org/react";
 import {Icon} from "@iconify/react";
-import { useSession } from "next-auth/react";
-import { signIn } from "next-auth/react";
 
 import PrimaryButton from "@/lib/components/button/PrimaryButton";
-import WalletIcon from "@/public/icon/wallet.svg";
 
 import SiweButton from "../SiweButton";
-import { data } from "autoprefixer";
 
 export default function Component() {
-  const [isVisible, setIsVisible] = React.useState(false);
   const { data: session } = useSession();
+  const router = useRouter();
+
+  const [isVisible, setIsVisible] = React.useState(false);
 
   useEffect(() => {
-    console.log(">>", session)
-  }, [data])
+    if (session) {
+      router.push("/explore");
+      return;
+    }
+  }, [session]);
 
   const toggleVisibility = () => setIsVisible(!isVisible);
 
@@ -107,12 +110,6 @@ export default function Component() {
               Continue with Google
             </Button>
             <SiweButton />
-            <Button
-              startContent={<WalletIcon className="text-default-500" width={24} />}
-              variant="bordered"
-            >
-              Sign Up with Wallet
-            </Button>
           </div>
 
           <p className="text-center text-small">
