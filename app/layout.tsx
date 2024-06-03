@@ -4,9 +4,13 @@ import { Link } from "@nextui-org/link";
 import clsx from "clsx";
 
 import { Providers } from "./providers";
+import WagmiProvider from "@/lib/web3/WagmiProvider";
+import { wagmiConfig } from "@/lib/web3/WagmiConfig";
 
 import { siteConfig } from "@/lib/config/site";
 import { fontSans } from "@/lib/config/fonts";
+import { cookieToInitialState } from "wagmi";
+import { headers } from "next/headers";
 
 export const metadata: Metadata = {
   title: {
@@ -31,6 +35,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const initialState = cookieToInitialState(wagmiConfig, headers().get("cookie"));
+
   return (
     <html suppressHydrationWarning lang="en">
       <head />
@@ -41,7 +47,9 @@ export default function RootLayout({
         )}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
-          {children}
+          <WagmiProvider initialState={initialState}>
+            {children}
+          </WagmiProvider>
         </Providers>
       </body>
     </html>
