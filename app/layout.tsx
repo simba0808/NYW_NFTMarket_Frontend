@@ -7,8 +7,6 @@ import { Providers } from "./providers";
 
 import { siteConfig } from "@/lib/config/site";
 import { fontSans } from "@/lib/config/fonts";
-import Header from "@/lib/components/layout/Header";
-import Footer from "@/lib/components/layout/Footer";
 
 export const metadata: Metadata = {
   title: {
@@ -38,18 +36,12 @@ export default function RootLayout({
       <head />
       <body
         className={clsx(
-          "min-h-screen bg-background font-sans antialiased",
+          "min-h-screen bg-dark-blue font-sans antialiased",
           fontSans.variable,
         )}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
-          <div className="page-bg">
-            <Header />
-            <main className="main-pt">
-              {children}
-            </main>
-            <Footer />
-          </div>
+          {children}
         </Providers>
       </body>
     </html>

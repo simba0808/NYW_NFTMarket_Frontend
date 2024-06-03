@@ -18,13 +18,14 @@
 		"@nextui-org/kbd": "^2.0.29",
 		"@nextui-org/link": "^2.0.30",
 		"@nextui-org/navbar": "^2.0.31",
-		"@nextui-org/react": "^2.2.0",
+		"@nextui-org/react": "^2.4.0",
 		"@nextui-org/snippet": "^2.0.36",
 		"@nextui-org/switch": "^2.0.29",
 		"@nextui-org/system": "2.2.0",
 		"@nextui-org/theme": "2.2.4",
 		"@react-aria/ssr": "^3.9.2",
 		"@react-aria/visually-hidden": "^3.8.10",
+		"@svgr/webpack": "^8.1.0",
 		"@types/node": "20.5.7",
 		"@types/react": "18.3.2",
 		"@types/react-dom": "18.3.0",
@@ -56,7 +57,6 @@
 		"typescript": "5.0.4"
 	},
 	"devDependencies": {
-		"@iconify/react": "^5.0.0",
-		"@svgr/webpack": "^8.1.0"
+		"@iconify/react": "^5.0.0"
 	}
 }

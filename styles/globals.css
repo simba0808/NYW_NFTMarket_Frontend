@@ -47,6 +47,10 @@
       1px  1px 5px #555;
   }
 
+  span, p {
+    font-size: 16px;
+    font-weight: 400;
+  }
 
   li:hover {
     color: #ffffff99;
@@ -61,6 +65,10 @@
     }
     h2 p {
       font-size: 40px;
+    }
+
+    span, p {
+      font-size: 12px;
     }
   }
 
@@ -118,6 +126,7 @@
   .main-pt {
     width: 100%;
     padding-top: 100px;
+    padding-bottom: 50px;
   }
 
   @layer components {
@@ -137,9 +146,41 @@
       cursor: pointer;
     }
 
+    .btn-reverse {
+      background-image: url("/bluebutton.png");
+      color: #060925;
+      background-repeat: no-repeat;  
+      background-position: 0% 0%;
+      background-size: 100% 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .btn-reverse:hover {
+      cursor: pointer;
+      background-image: url("/whitebutton.png");
+      color: white;
+    }
+
     .roadmap-card {
       background-image: linear-gradient(to left, #6dbfddda 10%, #6dbfdd46 20%, #6dbfdd00 30%);
       border-radius: 0.5rem;
+    }
+
+    .font-small {
+      font-size: 14px;
+      font-weight: 300;
+    }
+
+    .font-medium {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .font-large {
+      font-size: 24px;
+      font-weight: 700;
     }
 
     .roadmap-left-card {
@@ -182,6 +223,15 @@
         font-size: 12px;
         padding: 0rem 0.5rem;
       }
+      .font-small {
+        font-size: 10px;
+      }
+      .font-medium {
+        font-size: 14px;
+      }
+      .font-large {
+        font-size: 20px;
+      }
     }
   }
 
@@ -190,6 +240,9 @@
       border-radius: 0.5rem;
       border: 1px solid rgba(55, 65, 81, 0.3);
       background: linear-gradient(to right, rgba(55, 65, 81, 0.5), rgba(55, 65, 81, 0.1));
+    }
+    .prompt-container p {
+      font-size: 12px;
     }
   }
 }

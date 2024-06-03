@@ -53,7 +53,7 @@ const Explorer = () => {
           <img className="w-8 h-8" src="/asset/avatar.png" alt="Not Found" />
           <div>
             <p className="font-medium">{creator}</p>
-            <p className="mt-2 text-[14px] font-light">{comment}</p>
+            <p className="small-font mt-2">{comment}</p>
           </div>
         </div>
       );
@@ -71,11 +71,11 @@ const Explorer = () => {
               <div className="flex gap-2">
                 <img src="/asset/avatar.png" alt="Not Found" />
                 <div>
-                  <p className="">{NFTDetails[nftId-1].creator}</p>
-                  <p className="text-[12px] lg:text-[16px]">{NFTDetails[nftId-1].id}</p>
+                  <p>{NFTDetails[nftId-1].creator}</p>
+                  <p>{NFTDetails[nftId-1].id}</p>
                 </div>
               </div>
-              <div className="flex gap-3 lg:gap-6 text-[12px] lg:text-[16px]">
+              <div className="flex gap-3 lg:gap-6">
                 <span className="flex gap-1">
                   <FireIcon />
                   <span>{NFTDetails[nftId-1].fire}</span>
@@ -144,7 +144,7 @@ const Explorer = () => {
                 <img className="w-8" src="/asset/avatar.png" alt="Not Found" />
               }
               endContent = {
-                <Button className="bg-light-blue text-[#060925] font-semibold">Send</Button>
+                <Button className="bg-light-blue text-dark-blue font-semibold">Send</Button>
               }
             />
           </div>
@@ -169,7 +169,7 @@ const Explorer = () => {
               showControls
               showShadow
               variant="light"
-              className="text-[#060925]"
+              className="text-dark-blue"
               page={page}
               total={pages}
               onChange={(page: number) => setPage(page)}
@@ -212,15 +212,15 @@ const Explorer = () => {
       </div>
       <div className="container">
         <div className="flex justify-between items-center mt-10">
-          <span className="font-normal text-[12px] lg:text-[16px]">
+          <span>
             <span className="hover:cursor-pointer">Home</span> 
-            <span className={`${selectedNFT==-1?"text-light-blue":""} hover:cursor-pointer`} onClick={() => setSelectedNFT(-1)}> &#187; NFT’s EXPLORE</span>
+            <span className={`${selectedNFT==-1?"text-light-blue":""} hover:cursor-pointer`} role="button" tabIndex={0} onClick={() => setSelectedNFT(-1)}> &#187; NFT’s EXPLORE</span>
             {
               selectedNFT !== -1 && <span className="text-light-blue hover:cursor-pointer"> &#187; {NFTDetails[selectedNFT - 1].name}</span>
             }
           </span>
           <Switch defaultSelected color="secondary">
-            <span className="text-[12px] lg:text-[16px]">Buy Now</span>
+            <span>Buy Now</span>
           </Switch>
         </div>
         {
@@ -239,24 +239,24 @@ const Explorer = () => {
                     <Icon className="text-default-500" icon="solar:magnifer-linear" width={20} />
                   }
                 />
-                <div className="svg-container flex flex-wrap lg:flex-nowrap gap-2 text-[20px] font-medium">
-                  <span className={`${selectedItem == 0 ? "text-light-blue":""} item`} onClick={() => setSelectedItem(0)}>
+                <div className="svg-container flex flex-wrap lg:flex-nowrap gap-2 font-medium">
+                  <span className={`${selectedItem == 0 ? "text-light-blue":""} item`} role="button" tabIndex={0} onClick={() => setSelectedItem(0)}>
                     <FeaturedIcon className={selectedItem == 0?"fill-light-blue":"fill-white"} />
                     Featured
                   </span>
-                  <span className={`${selectedItem == 1 ? "text-light-blue":""} item`} onClick={() => setSelectedItem(1)}>
+                  <span className={`${selectedItem == 1 ? "text-light-blue":""} item`} role="button" tabIndex={0} onClick={() => setSelectedItem(1)}>
                     <PFPIcon className={selectedItem == 1?"fill-light-blue":"fill-white"} />
                     PFP
                   </span>
-                  <span className={`${selectedItem == 2 ? "text-light-blueeee":""} item`} onClick={() => setSelectedItem(2)}>
+                  <span className={`${selectedItem == 2 ? "text-light-blueeee":""} item`} role="button" tabIndex={0} onClick={() => setSelectedItem(2)}>
                     <VideoIcon className={selectedItem == 2?"fill-light-blue":"fill-white"} />
                     Video
                   </span>
-                  <span className={`${selectedItem == 3 ? "text-light-blue":""} item`} onClick={() => setSelectedItem(3)}>
+                  <span className={`${selectedItem == 3 ? "text-light-blue":""} item`} role="button" tabIndex={0} onClick={() => setSelectedItem(3)}>
                     <MusicIcon className={selectedItem == 3?"fill-light-blue":"fill-white"} />
                     Music
                   </span>
-                  <span className={`${selectedItem == 4 ? "text-light-blue":""} item`} onClick={() => setSelectedItem(4)}>
+                  <span className={`${selectedItem == 4 ? "text-light-blue":""} item`} role="button" tabIndex={0} onClick={() => setSelectedItem(4)}>
                     <NewIcon className={selectedItem == 4?"fill-light-blue":"fill-white"} />
                     Newest
                   </span>

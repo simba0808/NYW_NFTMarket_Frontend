@@ -30,7 +30,7 @@ type Props = {
 
 const NFTViewCard: FC<Props> = ({data, onClick}) => {
   return (
-    <div className="p-2 rounded-md bg-white/5 hover:cursor-pointer" onClick={() => onClick(data.id)}>
+    <div className="p-2 rounded-md bg-white/5 hover:cursor-pointer" role="button" tabIndex={0} onClick={() => onClick(data.id)}>
       <img className="!h-[400px] rounded-md" src={data.asset} alt="Not Found" />
     </div>
   )
