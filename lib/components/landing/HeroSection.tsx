@@ -1,3 +1,6 @@
+import Link from "next/link";
+import PrimaryButton from "@/lib/components/button/PrimaryButton";
+
 const HeroStatus = ({ icon, state, text }: { icon: string; state: string; text: string }) => {
   return (
     <div className="flex">
@@ -24,7 +27,10 @@ export default function HeroSection() {
                 NYW, the bridge between Blockchain and AI, lets you own a piece of the action. 
                 Generate and mint NFTs, unlocking the future of creativity in the heart of the world.
               </p>
-              <div></div>
+              <div className="flex items-center gap-10">
+                <PrimaryButton text="Join Us" className="w-[200px]" />
+                <Link href="https://web.telegram.org/" className="text-lg text-light-blue font-medium underline underline-offset-4 uppercase">Join Community</Link>
+              </div>
             </div>
           </div>
           <div className="flex-[50%]">

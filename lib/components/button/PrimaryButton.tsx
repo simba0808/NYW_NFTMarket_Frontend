@@ -26,7 +26,7 @@ const PrimaryButton: React.FC<ButtonProps> = ({
     >
       <span className="ease absolute right-0 -mt-12 h-32 w-8 translate-x-12 rotate-12 transform bg-white opacity-10 transition-all duration-700 group-hover:-translate-x-40">
       </span>
-      <span className="relative w-full text-center uppercase">
+      <span className={twMerge("relative w-full text-center uppercase", varient==="secondary" && "font-small font-normal")}>
         { text }
       </span>
     </div>

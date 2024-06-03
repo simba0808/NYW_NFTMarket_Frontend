@@ -37,7 +37,7 @@ export default function Header() {
                 <span>Campaigns</span>
               </li>
             </ul>
-            <PrimaryButton text="Get Started" className="w-32 md:w-40" onClick={() => router.push("/signin")} varient="secondary" />
+            <PrimaryButton text="Connect Wallet" className="w-32 md:w-40" onClick={() => router.push("/signin")} varient="secondary" />
           </header>
         </div>
       </div>
