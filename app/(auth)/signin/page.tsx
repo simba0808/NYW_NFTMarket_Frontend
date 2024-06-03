@@ -5,6 +5,7 @@ import {Button, Input, Link, Divider, User, Checkbox} from "@nextui-org/react";
 import {Icon} from "@iconify/react";
 
 import PrimaryButton from "@/lib/components/button/PrimaryButton";
+import WalletIcon from "@/public/icon/wallet.svg";
 
 export default function Component() {
   const [isVisible, setIsVisible] = React.useState(false);
@@ -93,10 +94,10 @@ export default function Component() {
               Continue with Google
             </Button>
             <Button
-              startContent={<Icon className="text-default-500" icon="fe:github" width={24} />}
+              startContent={<WalletIcon className="text-default-500" width={24} />}
               variant="bordered"
             >
-              Continue with Wallet
+              Sign Up with Wallet
             </Button>
           </div>
 
