@@ -1,14 +1,24 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import {Button, Input, Link, Divider, User, Checkbox} from "@nextui-org/react";
 import {Icon} from "@iconify/react";
+import { useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 
 import PrimaryButton from "@/lib/components/button/PrimaryButton";
 import WalletIcon from "@/public/icon/wallet.svg";
 
+import SiweButton from "../SiweButton";
+import { data } from "autoprefixer";
+
 export default function Component() {
   const [isVisible, setIsVisible] = React.useState(false);
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    console.log(">>", session)
+  }, [data])
 
   const toggleVisibility = () => setIsVisible(!isVisible);
 
@@ -90,9 +100,13 @@ export default function Component() {
             <Button
               startContent={<Icon icon="flat-color-icons:google" width={24} />}
               variant="bordered"
+              onClick={() => {
+                signIn("google", { callbackUrl: "http://localhost:3000/explore" });
+              }}
             >
               Continue with Google
             </Button>
+            <SiweButton />
             <Button
               startContent={<WalletIcon className="text-default-500" width={24} />}
               variant="bordered"
