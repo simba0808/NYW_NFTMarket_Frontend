@@ -1,6 +1,5 @@
 "use client";
 import { useCallback, useState } from "react";
-import { Image } from "@nextui-org/react";
 import { useAccount } from "wagmi";
 import {Icon} from "@iconify/react";
 
@@ -38,7 +37,10 @@ const CopyLink = ({url}: {url: string}) => {
               icon="fluent:copy-24-filled"
             />
         }
-        <AddressDisplay address={url} />
+        {
+          url && <AddressDisplay address={url} />
+        }
+        
       </div>
   );
 }
