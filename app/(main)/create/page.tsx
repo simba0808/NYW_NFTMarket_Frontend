@@ -27,7 +27,7 @@ const CreateNFT = () => {
           itemClasses={{
             separator: "px-2"
           }}
-          className="my-10"
+          className="my-6"
         >
           <BreadcrumbItem>Home</BreadcrumbItem>
           <BreadcrumbItem>Create NFTs</BreadcrumbItem>

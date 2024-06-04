@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Button, Input, Switch,Accordion, AccordionItem, Pagination } from "@nextui-org/react";
+import { Button, Input, Switch,Accordion, AccordionItem, Pagination, Breadcrumbs, BreadcrumbItem } from "@nextui-org/react";
 import { Icon } from "@iconify/react";
 
 import FeaturedIcon from "@/public/icon/featured.svg";
@@ -211,13 +211,18 @@ const Explorer = () => {
         <div className="absolute top-0 w-full h-full bg-transparent/5" />
       </div>
       <div className="container">
-        <div className="flex justify-between items-center mt-10">
+        <div className="flex justify-between items-center my-6">
           <span>
-            <span className="hover:cursor-pointer">Home</span> 
-            <span className={`${selectedNFT==-1?"text-light-blue":""} hover:cursor-pointer`} role="button" tabIndex={0} onClick={() => setSelectedNFT(-1)}> &#187; NFT’s EXPLORE</span>
-            {
-              selectedNFT !== -1 && <span className="text-light-blue hover:cursor-pointer"> &#187; {NFTDetails[selectedNFT - 1].name}</span>
-            }
+            <Breadcrumbs
+              separator=">>"
+              itemClasses={{
+                separator: "px-2"
+              }}
+            >
+              <BreadcrumbItem>Home</BreadcrumbItem>
+              <BreadcrumbItem onClick={() => setSelectedNFT(-1)}>NFT EXPLORE</BreadcrumbItem>
+              { selectedNFT !== -1 && <BreadcrumbItem>{NFTDetails[selectedNFT - 1].name}</BreadcrumbItem> }
+            </Breadcrumbs>
           </span>
           <Switch defaultSelected color="secondary">
             <span>Buy Now</span>

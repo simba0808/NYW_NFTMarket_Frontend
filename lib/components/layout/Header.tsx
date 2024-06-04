@@ -1,9 +1,15 @@
 "use client";
 import { ReactNode, useCallback, useMemo } from "react";
-import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { usePathname, useRouter } from "next/navigation";
 
-export default function Header({trailing}: {trailing?: ReactNode}) {
+import ToggleProfile from "@/lib/components/profile/ToggleProfile";
+import PrimaryButton from "@/lib/components/button/PrimaryButton";
+
+export default function Header() {
   const router = useRouter();
+  const { data: session, status } = useSession();
+  const path = usePathname();
   
   const onLogo = useCallback(() => {
     router.push("/");
@@ -15,9 +21,22 @@ export default function Header({trailing}: {trailing?: ReactNode}) {
     );
   }, []);
 
+  const headerTrailing = useMemo(() => (
+    <div>
+      {
+        session ? 
+          <ToggleProfile /> :
+          <PrimaryButton 
+            text={path==="/signin"?"Get Started":"Connect Wallet"}
+            className="w-32 md:w-40" 
+            onClick={() => router.push("/signin")} varient="secondary" 
+          />
+      }
+    </div>
+  ), [session, status]);
   
   return (
-    <div className="header__wrapper overflow-x bg-dark-blue">
+    <div className="header__wrapper overflow-x bg-dark-blue shadow-lg shadow-white/10">
       <div className=" bg-white/5">
         <div className="header__container">
           <header className="flex flex-row items-center justify-between">
@@ -36,7 +55,7 @@ export default function Header({trailing}: {trailing?: ReactNode}) {
                 <span>Campaigns</span>
               </li>
             </ul>
-            { trailing }
+            { headerTrailing }
           </header>
         </div>  
       </div>
