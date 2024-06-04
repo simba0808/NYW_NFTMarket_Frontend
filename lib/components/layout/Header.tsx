@@ -5,10 +5,12 @@ import { usePathname, useRouter } from "next/navigation";
 
 import ToggleProfile from "@/lib/components/profile/ToggleProfile";
 import PrimaryButton from "@/lib/components/button/PrimaryButton";
+import { useAccount } from "wagmi";
 
 export default function Header() {
   const router = useRouter();
   const { data: session, status } = useSession();
+  const { address } = useAccount();
   const path = usePathname();
   
   const onLogo = useCallback(() => {
@@ -24,7 +26,7 @@ export default function Header() {
   const headerTrailing = useMemo(() => (
     <div>
       {
-        session ? 
+        session && address ? 
           <ToggleProfile /> :
           <PrimaryButton 
             text={path==="/signin"?"Get Started":"Connect Wallet"}

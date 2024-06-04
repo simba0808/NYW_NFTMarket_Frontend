@@ -22,13 +22,13 @@ const ProfileButton = ({
 }
 
 const ProfileBody = () => {
-  const { disconnect } = useAuthSession();
+  const { disconnectAccount } = useAuthSession();
 
   return (
     <div className="flex flex-col gap-1 px-2 py-3">
       <ProfileButton text="My Profile"  icon="lucide:user-round" />
       <ProfileButton text="Settings"  icon="lets-icons:setting-line-light" />
-      <ProfileButton text="Logout"  icon="majesticons:logout-line" onClick={disconnect} />
+      <ProfileButton text="Logout"  icon="majesticons:logout-line" onClick={disconnectAccount} />
     </div>
   );
 }
