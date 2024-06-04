@@ -1,9 +1,8 @@
 "use client";
-import { useCallback, useMemo } from "react";
+import { ReactNode, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import PrimaryButton from "../button/PrimaryButton";
 
-export default function Header() {
+export default function Header({trailing}: {trailing?: ReactNode}) {
   const router = useRouter();
   
   const onLogo = useCallback(() => {
@@ -37,9 +36,9 @@ export default function Header() {
                 <span>Campaigns</span>
               </li>
             </ul>
-            <PrimaryButton text="Connect Wallet" className="w-32 md:w-40" onClick={() => router.push("/signin")} varient="secondary" />
+            { trailing }
           </header>
-        </div>
+        </div>  
       </div>
     </div>
   );
