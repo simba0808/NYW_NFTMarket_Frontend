@@ -10,6 +10,11 @@ import PrimaryButton from "@/lib/components/button/PrimaryButton";
 
 import SiweButton from "../SiweButton";
 
+type Props = {
+  accessToken: string;
+  provider: string;
+}
+
 export default function Component() {
   const { data: session } = useSession();
   const router = useRouter();
@@ -17,7 +22,7 @@ export default function Component() {
   const [isVisible, setIsVisible] = React.useState(false);
 
   useEffect(() => {
-    if (session) {
+    if (session && session?.provider === "siwe") {
       router.push("/explore");
       return;
     }
