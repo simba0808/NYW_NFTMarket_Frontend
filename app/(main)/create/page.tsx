@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useAccount, useWriteContract } from "wagmi";
 import { Breadcrumbs, BreadcrumbItem, Tab, Tabs, Spinner, Spacer, Input } from "@nextui-org/react";
 
-import usePinata from "@/lib/web3/hook/usePinata";
 import TabImage from "./components/tabs/TabImage";
 import TabVideo from "./components/tabs/TabVideo";
 import TabMusic from "./components/tabs/TabMusic";
@@ -29,7 +28,6 @@ const CreateNFT = () => {
   const { data } = useSession();
   const { isConnected, address } = useAccount();
 
-  const { uploadMetadata } = usePinata();
   const { writeContractAsync: mintNFTAsync } = useWriteContract()
 
   const [activeTab, setActiveTab] = useState<WorkingTabs>(WorkingTabs.Image);
@@ -127,25 +125,87 @@ const CreateNFT = () => {
       .catch((error) => console.log("error", error));
   };
 
-  const mintNow = async () => {
-    let metadataURL = ""
-    if (nftName === "" || !genImg[selectedImage]) {
-      const uploadRes: any = await uploadMetadata(nftName, genImg[selectedImage]);
-      if (uploadRes.success === true) {
-        metadataURL = uploadRes?.pinataURL
-      }
-    }
+  const token = process.env.NEXT_PUBLIC_PINATA_JWT;
 
+  const uploadJSONToIPFS = async (JSONBody: any) => {
+    const url = `https://api.pinata.cloud/pinning/pinJSONToIPFS`;
     try {
-      const tx2 = await mintNFTAsync({
-        address: `0x${MARKET_ADDRESS}`,
-        abi: NFTABI,
-        functionName: "create",
-        args: [metadataURL],
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(JSONBody)
       });
-      console.log(tx2)
-    } catch (err) {
-      console.log(err)
+      
+      const data: any = res.json();
+    
+      return {
+        success: true,
+        pinataURL: `https://gateway.pinata.cloud/ipfs/${data.IpfsHash}`
+      };
+    } catch (error: any) {
+      console.error(error.message);
+      return {
+        success: false,
+        message: error.message,
+      };
+    }
+  };
+  
+  const uploadMetadata = async (nftName: string, nftAssetURL: string) => {
+    console.log(nftName, nftAssetURL)
+    return new Promise(async (resolve, reject) => {
+      if (!nftName || !nftAssetURL) {
+        reject(new Error("Missing nftColName or nftFileURL"));
+        return;
+      }
+
+      const nftJSON = {
+        name: nftName,
+        image: nftAssetURL, 
+        description: "Your NFT description here", // Add a description field if you want
+        attributes: [], // Add any custom attributes you want here
+      };
+
+      console.log("Json", nftJSON)
+      try {
+        const res = await uploadJSONToIPFS(nftJSON); // Since uploadJSONToIPFS looks like an async function
+        if (res.success === true) {
+          resolve(res);
+        } else {
+          throw new Error('Uploading to Pinata failed');
+        }
+      } catch (err) {
+        reject(err);
+      }
+    });
+  }
+
+
+  const mintNow = async () => {
+    if (nftName === "" || genImg[selectedImage] === "") {
+      alert("Select image and insert nft name");
+      return;
+    } else {
+      const uploadRes: any = await uploadMetadata(nftName, genImg[selectedImage]);
+      console.log(uploadRes)
+      if (uploadRes.success === true) {
+        const metadataURL = uploadRes?.pinataURL
+
+        try {
+          const tx2 = await mintNFTAsync({
+            address: MARKET_ADDRESS,
+            abi: NFTABI,
+            functionName: "create",
+            args: [metadataURL],
+          });
+          console.log(tx2)
+        } catch (err) {
+          console.log(err)
+        }
+      }
     }
   }
 
