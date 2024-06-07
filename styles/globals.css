@@ -25,6 +25,23 @@
     font-weight: 300;
   }
 
+  ::-webkit-scrollbar {
+    width: .25rem;
+    opacity: 0;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-radius: .5rem;
+    background-color: #e1e1e14d;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(.4,0,.2,1);
+    transition-duration: .15s;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
   body {
     font-family: 'Inter', sans-serif;
     font-feature-settings: 'calt' off;
@@ -121,6 +138,7 @@
     max-width: calc(1576px - 30px);
     padding-left: 20px;
     padding-right: 20px;
+    margin-bottom: 5rem;
   }
 
   .main-pt {

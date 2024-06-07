@@ -330,7 +330,7 @@ const Explorer = () => {
                     <PrimaryButton className="w-[300px]" text="View All Voice Models" />
                   </div>
                 </div>
-                <div className="mt-16 mb-20">
+                <div className="mt-16">
                   <h2>Hot</h2>
                   <p>The largest and unique Super rare NFT marketplace For crypto-collectibles</p>
                   <div className="mt-10">
