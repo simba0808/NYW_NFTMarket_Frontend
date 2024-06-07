@@ -13,15 +13,15 @@ export default function TabImage({ modelSetter, inputText, setInputText, onSelec
     { key: "DALL-E", label: "DALL-E" }
   ];
   const styles = [
-    { name: "Pixel", model_id: "pixel-art-diffusion-xl" },
-    { name: "Cartoon", model_id: "disney-pixal-cartoon" },
-    { name: "Anime", model_id: "anything-v3" },
-    { name: "Abstract", model_id: "neonpunk" },
+    { name: "Pixel", model_id: "pixel-art-v3" },
+    { name: "Cartoon", model_id: "cartoonish" },
+    { name: "Anime", model_id: "anime-diffusion" },
+    { name: "Fantasy", model_id: "sdxl-basemodel-3-fantasy" },
     { name: "3d", model_id: "realscifi" },
-    { name: "Sketch", model_id: "pencilsketchstyle" },
+    { name: "Sketch", model_id: "queratogray-sketch" },
     { name: "Technology", model_id: "techrealistic" },
     { name: "Digital-art", model_id: "spybg" },
-    { name: "Film", model_id: "realistic-vision-v13" }
+    { name: "Film", model_id: "realistic-vision-v40" },
   ];
 
 
@@ -95,8 +95,8 @@ export default function TabImage({ modelSetter, inputText, setInputText, onSelec
                     handleCardClick(style.model_id);
                   }}
                   height={200}
-                  src={`/asset/style${index + 1}.png`}
                   width={200}
+                  src={`/asset/style${index + 1}.png`}
                 />
                 <CardFooter className="p-0 justify-center absolute bottom-1 z-10">
                   <p className="text-tiny text-white/80">{style.name}</p>
