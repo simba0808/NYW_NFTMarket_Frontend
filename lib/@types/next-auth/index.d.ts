@@ -3,8 +3,6 @@ import type {DefaultJWT} from 'next-auth/jwt';
 import type {RedirectableProviderType} from 'next-auth/providers';
 import type {OAuthProviderType} from 'next-auth/src/providers/oauth';
 
-import { Provider } from "@/types";
-
 declare module 'next-auth' {
   interface Session extends DefaultSession {
     idToken?: string; // google
