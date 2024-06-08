@@ -1,9 +1,17 @@
 "use client";
-import { useCallback, useMemo } from "react";
-import { useRouter } from "next/navigation";
+import { ReactNode, useCallback, useMemo } from "react";
+import { useSession } from "next-auth/react";
+import { usePathname, useRouter } from "next/navigation";
+
+import ToggleProfile from "@/lib/components/profile/ToggleProfile";
+import PrimaryButton from "@/lib/components/button/PrimaryButton";
+import { useAccount } from "wagmi";
 
 export default function Header() {
   const router = useRouter();
+  const { data: session, status } = useSession();
+  const { address } = useAccount();
+  const path = usePathname();
   
   const onLogo = useCallback(() => {
     router.push("/");
@@ -15,9 +23,22 @@ export default function Header() {
     );
   }, []);
 
+  const headerTrailing = useMemo(() => (
+    <div>
+      {
+        session && address ? 
+          <ToggleProfile /> :
+          <PrimaryButton 
+            text={path==="/signin"?"Get Started":"Connect Wallet"}
+            className="w-32 md:w-40" 
+            onClick={() => router.push("/signin")} varient="secondary" 
+          />
+      }
+    </div>
+  ), [session, status]);
   
   return (
-    <div className="header__wrapper overflow-x bg-dark-blue">
+    <div className="header__wrapper overflow-x bg-dark-blue shadow-lg shadow-white/10">
       <div className=" bg-white/5">
         <div className="header__container">
           <header className="flex flex-row items-center justify-between">
@@ -36,12 +57,9 @@ export default function Header() {
                 <span>Campaigns</span>
               </li>
             </ul>
-            <div className="relative w-32 md:w-40">
-              <img src="/bluebutton.png" alt="Not Found" />
-              <button className="place-center z-10 w-full text-center" onClick={() => router.push("/signin")}>Get Started</button>
-            </div>
+            { headerTrailing }
           </header>
-        </div>
+        </div>  
       </div>
     </div>
   );

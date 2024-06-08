@@ -2,16 +2,16 @@
 import React from "react";
 
 import Header from "@/lib/components/layout/Header";
-import Footer from "@/lib/components/layout/Footer";
 
-export default function MainLayout({children}: {
+export default function MainLayout({
+  children
+}: {
   children: React.ReactNode
 }) {
   return (
-    <>
+    <div className="h-[100vh] bg-dark-blue">
       <Header />
       {children}
-      <Footer />
-    </>
-  )
+    </div>
+  );
 }

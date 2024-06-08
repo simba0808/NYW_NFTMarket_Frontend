@@ -1,13 +1,34 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAccount } from "wagmi";
+import { signIn, useSession } from "next-auth/react";
 import {Button, Input, Link, Divider, User, Checkbox} from "@nextui-org/react";
 import {Icon} from "@iconify/react";
 
 import PrimaryButton from "@/lib/components/button/PrimaryButton";
 
+import SiweButton from "../SiweButton";
+
+type Props = {
+  accessToken: string;
+  provider: string;
+}
+
 export default function Component() {
+  const { address, isConnected } = useAccount();
+  const { data: session } = useSession();
+  const router = useRouter();
+
   const [isVisible, setIsVisible] = React.useState(false);
+
+  useEffect(() => {
+    if (session && address && isConnected) {
+      router.push("/explore");
+      return;
+    }
+  }, [address, isConnected]);
 
   const toggleVisibility = () => setIsVisible(!isVisible);
 
@@ -89,15 +110,13 @@ export default function Component() {
             <Button
               startContent={<Icon icon="flat-color-icons:google" width={24} />}
               variant="bordered"
+              onClick={() => {
+                signIn("google", { callbackUrl: "http://localhost:3000/explore" });
+              }}
             >
               Continue with Google
             </Button>
-            <Button
-              startContent={<Icon className="text-default-500" icon="fe:github" width={24} />}
-              variant="bordered"
-            >
-              Continue with Wallet
-            </Button>
+            <SiweButton />
           </div>
 
           <p className="text-center text-small">

@@ -1,12 +1,18 @@
 import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
-import { Link } from "@nextui-org/link";
 import clsx from "clsx";
+import { getServerSession } from "next-auth";
 
 import { Providers } from "./providers";
+import Web3ModalProvider from "@/lib/web3/WagmiProvider";
+import AuthSessionProvider from "@/lib/auth/AuthSessionProvider";
+import { wagmiConfig } from "@/lib/web3/WagmiConfig";
+import authConfig from "@/lib/auth/authConfig";
 
 import { siteConfig } from "@/lib/config/site";
 import { fontSans } from "@/lib/config/fonts";
+import { cookieToInitialState } from "wagmi";
+import { headers } from "next/headers";
 
 export const metadata: Metadata = {
   title: {
@@ -26,11 +32,14 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const initialState = cookieToInitialState(wagmiConfig, headers().get("cookie"));
+  const session = await getServerSession(authConfig);
+
   return (
     <html suppressHydrationWarning lang="en">
       <head />
@@ -41,7 +50,11 @@ export default function RootLayout({
         )}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
-          {children}
+          <Web3ModalProvider initialState={initialState}>
+            <AuthSessionProvider session={session}>
+              {children}
+            </AuthSessionProvider>
+          </Web3ModalProvider>
         </Providers>
       </body>
     </html>
