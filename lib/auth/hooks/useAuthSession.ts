@@ -9,12 +9,12 @@ const useAuthSession = () => {
 
   const disconnectAccount = useCallback(() => {
     signOut({
-      redirect: false
-    })
+      redirect: false,
+    });
     disconnect();
   }, [session]);
 
-  return { session, disconnectAccount }
-}
+  return { session, disconnectAccount };
+};
 
 export default useAuthSession;

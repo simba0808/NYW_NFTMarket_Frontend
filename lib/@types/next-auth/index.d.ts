@@ -27,5 +27,8 @@ declare module "next-auth/jwt" {
 
 // TODO: doesn't work for some reason
 declare module "next-auth/providers" {
-  export declare type BuiltInProviderType = "siwe";
+  export declare type BuiltInProviderType =
+    | OAuthProviderType
+    | RedirectableProviderType
+    | "siwe";
 }

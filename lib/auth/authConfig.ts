@@ -1,13 +1,15 @@
-import { AuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import { SiweMessage } from "siwe";
+
+import type { AuthOptions } from "next-auth";
 
 const authConfig: AuthOptions = {
   providers: [
     Credentials({
       id: "siwe",
       name: "SIWE",
+      type: "credentials",
       credentials: {
         message: {
           label: "Message",
