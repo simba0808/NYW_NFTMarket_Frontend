@@ -61,13 +61,15 @@ const CreateNFT = () => {
     if(divElement) {
       window.scrollTo({
         top: divElement.getBoundingClientRect().top + window.pageYOffset - 120,
-        behavior: 'smooth' // Optional: Add smooth scrolling effect
+        behavior: "smooth", // Optional: Add smooth scrolling effect
       });
     }
-  }, [])
+  }, []);
 
+  const [isLoading, setIsLoading] = useState(false);
   const GenerateImage = () => {
     setIsGenerating(true);
+    setIsLoading(true);
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
@@ -104,7 +106,7 @@ const CreateNFT = () => {
       method: "POST",
       headers: myHeaders,
       body: raw,
-      redirect: "follow"
+      redirect: "follow",
     };
 
     fetch("https://modelslab.com/api/v6/images/text2img", requestOptions)
@@ -118,9 +120,10 @@ const CreateNFT = () => {
         }
 
         const imageData = resultImage.output;
-        console.log({ imageData })
+        console.log({ imageData });
         setGenImg([imageData[0], imageData[1], imageData[2]]);
         setIsGenerating(false);
+        setIsLoading(false);
       })
       .catch((error) => console.log("error", error));
   };
@@ -210,15 +213,19 @@ const CreateNFT = () => {
   }
 
   return (
-    <div >
+    <div>
       <div className="relative">
-        <img className="w-full max-h-[600px]" src="/page-create.png" alt="Not Found" />
+        <img
+          className="w-full max-h-[600px]"
+          src="/page-create.png"
+          alt="Not Found"
+        />
       </div>
       <div className="container" id="detailed-container">
         <Breadcrumbs
           separator=">>"
           itemClasses={{
-            separator: "px-2"
+            separator: "px-2",
           }}
           className="my-6"
         >
@@ -227,25 +234,29 @@ const CreateNFT = () => {
         </Breadcrumbs>
         <div className="flex flex-col lg:flex-row gap-3 pb-6">
           <div className="lg:max-w-[350px] px-3 bg-white/5 rounded-md  p-4 pr-0">
-            <div className="lg:h-[calc(100vh-220px)] lg:overflow-y-auto pr-4">
+            <div className="lg:h-[calc(100vh-220px)] lg:overflow-y-auto pr-4 flex flex-col">
               <Tabs
-                aria-label="Notifications"
+                fullWidth
                 color="primary"
                 classNames={{
                   base: "w-full",
-                  tabList: "gap-6 px-6 py-0 w-full relative rounded-none border-b border-divider",
+                  tabList:
+                    "gap-3 px-3 py-0 w-full relative rounded-none border-b border-divider",
                   tabContent: "group-data-[selected=true]:text-[#06b6d4]",
                   cursor: "w-full bg-[#22d3ee]",
-                  tab: "max-w-fit px-2 h-12",
+                  tab: "px-2 h-12",
                 }}
                 selectedKey={activeTab}
                 variant="underlined"
-                onSelectionChange={(selected) => setActiveTab(selected as WorkingTabs)}
+                onSelectionChange={(selected) =>
+                  setActiveTab(selected as WorkingTabs)
+                }
               >
                 <Tab
                   key="image"
                   title={
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center space-x-1">
+                      <GalleryIcon />
                       <span>Image</span>
                     </div>
                   }
@@ -253,7 +264,8 @@ const CreateNFT = () => {
                 <Tab
                   key="video"
                   title={
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center space-x-1">
+                      <VideoIcon />
                       <span>Video</span>
                     </div>
                   }
@@ -261,7 +273,8 @@ const CreateNFT = () => {
                 <Tab
                   key="music"
                   title={
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center space-x-1">
+                      <MusicIcon />
                       <span>Music</span>
                     </div>
                   }
@@ -282,8 +295,11 @@ const CreateNFT = () => {
                 <div className="flex justify-center">
                   <PrimaryButton
                     text="Create Now"
-                    onClick={() => { GenerateImage(); setIsCreating(true); }}
-                    //isLoading={isGenerating}
+                    onClick={() => {
+                      GenerateImage();
+                      setIsCreating(true);
+                    }}
+                    isLoading={isLoading}
                   />
                 </div>
                 <p className="text-center">Cost: 2 $cNYW</p>
@@ -300,13 +316,24 @@ const CreateNFT = () => {
                   <div className="max-w-[500px] flex justify-center items-center flex-col text-center">
                     <img src="/generate.svg" alt="Not Found" />
                     <p>Generated images will appear here</p>
-                    <p className="font-small">Looks like you haven't created anything yet! Click the button below to copy a sample prompt and then click Generate.</p>
-                    <PrimaryButton className="min-w-[300px] mt-8" text="Use sample prompt" />
+                    <p className="font-small">
+                      Looks like you haven't created anything yet! Click the
+                      button below to copy a sample prompt and then click
+                      Generate.
+                    </p>
+                    <PrimaryButton
+                      className="min-w-[300px] mt-8"
+                      text="Use sample prompt"
+                    />
                   </div>
                 ) : (
                   <div className="w-full flex justify-center items-center flex-col">
                     {isGenerating ? (
-                      <Spinner label="Loading..." size="lg" style={{ color: '#15BFFD', background: 'transparent'}} />
+                      <Spinner
+                        label="Loading..."
+                        size="lg"
+                        style={{ color: "#15BFFD", background: "transparent" }}
+                      />
                     ) : (
                       <div className="w-full">
                         <div className="grid lg:grid-cols-3 gap-3">
@@ -346,13 +373,12 @@ const CreateNFT = () => {
                   </div>
                 )}
               </div>
-              
             </div>
           </div>
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default CreateNFT;
