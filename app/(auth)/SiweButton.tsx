@@ -16,10 +16,6 @@ const SiweButton = () => {
 
   const modalOpened = useRef(false);
 
-  useEffect(() => {
-    console.log(">>>>>>>>>>>>>>>", chains[0].id);
-  }, [chains])
-
   const onSignIn = useCallback(async () => {
     const callbackUrl = "/explore"
     if (!address) {

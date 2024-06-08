@@ -14,7 +14,6 @@ createWeb3Modal({
   wagmiConfig,
   projectId,
   enableAnalytics: true,
-  enableOnramp: true
 });
 
 export default function Web3ModalProvider({
