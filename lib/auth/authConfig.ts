@@ -1,6 +1,6 @@
 import { AuthOptions } from "next-auth";
-import Credentials from 'next-auth/providers/credentials';
-import Google from 'next-auth/providers/google';
+import Credentials from "next-auth/providers/credentials";
+import Google from "next-auth/providers/google";
 import { SiweMessage } from "siwe";
 
 const authConfig: AuthOptions = {
@@ -21,47 +21,49 @@ const authConfig: AuthOptions = {
         },
       },
       async authorize(credentials) {
-        console.log("here")
+        console.log("here");
         try {
-          const siwe = new SiweMessage(JSON.parse(credentials?.message || "{}"));
+          const siwe = new SiweMessage(
+            JSON.parse(credentials?.message || "{}")
+          );
           const result = await siwe.verify({
-            signature: credentials?.signature || ""
+            signature: credentials?.signature || "",
           });
-          
+
           if (result.success) {
             return {
               id: siwe.address,
-            }
+            };
           }
-          return null
+          return null;
         } catch (e) {
-          return null
+          return null;
         }
       },
     }),
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      httpOptions:{
-        timeout:60000,
-      }
-    })
+      httpOptions: {
+        timeout: 60000,
+      },
+    }),
   ],
   session: {
     strategy: "jwt",
   },
   pages: {
-    signIn: '/signin',
+    signIn: "/signin",
   },
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    async jwt({token, user, account, profile, trigger}) {
-      if (trigger === 'signIn') {
+    async jwt({ token, user, account, profile, trigger }) {
+      if (trigger === "signIn") {
         if (account) {
           token.accessToken = account.access_token!;
           token.refreshToken = account.refresh_token;
 
-          if (account.provider === 'google') {
+          if (account.provider === "google") {
             token.idToken = account.id_token;
           }
 
@@ -73,7 +75,7 @@ const authConfig: AuthOptions = {
       return token;
     },
 
-    async session({session, token}) {
+    async session({ session, token }) {
       return {
         ...session,
         idToken: token.idToken,
@@ -83,9 +85,8 @@ const authConfig: AuthOptions = {
         provider: token.provider,
         providerAccountId: token.providerAccountId,
       };
-    }
-  }
-}
-
+    },
+  },
+};
 
 export default authConfig;
