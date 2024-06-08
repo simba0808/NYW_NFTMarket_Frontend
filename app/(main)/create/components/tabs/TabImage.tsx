@@ -5,7 +5,7 @@ import { Select, SelectItem, Textarea, Card, CardFooter, Image } from "@nextui-o
 import ImageUploader from "../ImageUploader";
 import RatioCard from "../RatioCard";
 
-export default function TabImage({ modelSetter, inputText, setInputText, onSelect }: any) {
+export default function TabImage({ modelSetter, inputText, setInputText, imageSize, setImageSize }: any) {
 
   const models = [
     { key: "Stable Diffusion", label: "Stable Diffusion" },
@@ -13,28 +13,24 @@ export default function TabImage({ modelSetter, inputText, setInputText, onSelec
     { key: "DALL-E", label: "DALL-E" }
   ];
   const styles = [
-    { name: "Pixel", model_id: "pixel-art-diffusion-xl" },
-    { name: "Cartoon", model_id: "disney-pixal-cartoon" },
-    { name: "Anime", model_id: "anything-v3" },
-    { name: "Abstract", model_id: "neonpunk" },
+    { name: "Pixel", model_id: "pixel-art-v3" },
+    { name: "Cartoon", model_id: "cartoonish" },
+    { name: "Anime", model_id: "anime-diffusion" },
+    { name: "Fantasy", model_id: "sdxl-basemodel-3-fantasy" },
     { name: "3d", model_id: "realscifi" },
-    { name: "Sketch", model_id: "pencilsketchstyle" },
+    { name: "Sketch", model_id: "queratogray-sketch" },
     { name: "Technology", model_id: "techrealistic" },
     { name: "Digital-art", model_id: "spybg" },
-    { name: "Film", model_id: "realistic-vision-v13" }
+    { name: "Film", model_id: "realistic-vision-v40" },
   ];
 
 
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
-  const [selectedRatioIndex, setSelectRatioIndex] = useState<number | null>(null);
 
   const handleCardClick = (model_id: string) => {
     console.log(model_id);
     modelSetter(model_id);
   };
-  const handleRatioClick = (index: number, width: number, height: number) => {
-    setSelectRatioIndex(index);
-  }
 
   return (
     <div className="prompt-container py-6 divide-y-1 divide-white/10">
@@ -110,9 +106,10 @@ export default function TabImage({ modelSetter, inputText, setInputText, onSelec
           <div className="grid grid-cols-6 gap-3">
             {[1, 2, 3, 4, 5].map((size, index) => (
               <RatioCard 
-              key={index}
-              size={size} 
-              onSelect={(width, height) => handleRatioClick(index, width, height)}
+                key={index}
+                size={size} 
+                imageSize={imageSize}
+                setImageSize={setImageSize}
               />
             ))}
           </div>

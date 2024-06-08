@@ -4,31 +4,20 @@ import { twMerge } from "tailwind-merge";
 
 interface RatioCardProps {
   size: number;
-  onSelect: (width: number, height: number) => void;
+  imageSize: number;
+  setImageSize: (size: number) => void;
 }
 
-export default function RatioCard({ size, onSelect }: RatioCardProps) {
-  const ratios = [
-    { imagewidth: 1024, imageheight: 1024 },
-    { imagewidth: 1024, imageheight: 768 },
-    { imagewidth: 768, imageheight: 1024 },
-    { imagewidth: 1024, imageheight: 576 },
-    { imagewidth: 576, imageheight: 1024 },
-  ]
-  const [isSelected, setIsSelected] = useState(false);
+export default function RatioCard({ size, imageSize ,setImageSize }: RatioCardProps) {
   const handleRatioClick = () => {
-    setIsSelected(true); // Set isSelected to true when a card is clicked
-    const ratio = ratios[size - 1];
-    const { imagewidth: width, imageheight: height } = ratio;
-    console.log(`Image Width: ${ratio.imagewidth}, Image Height: ${ratio.imageheight}`);
-    onSelect(width, height);
+    setImageSize(size);
   }
 
   return (
     <Card
       radius="lg"
       onClick={handleRatioClick}
-      className={`${size > 3 ? "col-span-3" : "col-span-2"} ${isSelected ? "bg-[#15BFFD]" : "bg-white/5"} border-none hover:cursor-pointer`}
+      className={`${size > 3 ? "col-span-3" : "col-span-2"} ${imageSize===size ? "bg-[#15BFFD]" : "bg-white/5"} border-none hover:cursor-pointer`}
     >
       <CardBody onClick={handleRatioClick} className="items-center justify-center">
         <div

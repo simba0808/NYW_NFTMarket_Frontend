@@ -2,6 +2,7 @@
 
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useAccount } from "wagmi";
 import { signIn, useSession } from "next-auth/react";
 import {Button, Input, Link, Divider, User, Checkbox} from "@nextui-org/react";
 import {Icon} from "@iconify/react";
@@ -16,17 +17,18 @@ type Props = {
 }
 
 export default function Component() {
+  const { address, isConnected } = useAccount();
   const { data: session } = useSession();
   const router = useRouter();
 
   const [isVisible, setIsVisible] = React.useState(false);
 
   useEffect(() => {
-    if (session && session?.provider === "siwe") {
+    if (session && address && isConnected) {
       router.push("/explore");
       return;
     }
-  }, [session]);
+  }, [address, isConnected]);
 
   const toggleVisibility = () => setIsVisible(!isVisible);
 

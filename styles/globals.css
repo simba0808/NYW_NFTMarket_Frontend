@@ -64,10 +64,7 @@
       1px  1px 5px #555;
   }
 
-  span, p {
-    font-size: 16px;
-    font-weight: 400;
-  }
+  
 
   li:hover {
     color: #ffffff99;

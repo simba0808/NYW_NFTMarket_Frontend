@@ -67,6 +67,7 @@
 		"yarn": "^1.22.22"
 	},
 	"devDependencies": {
-		"@iconify/react": "^5.0.0"
+		"@iconify/react": "^5.0.0",
+		"@types/cookie": "^0.6.0"
 	}
 }

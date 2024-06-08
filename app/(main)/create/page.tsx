@@ -1,7 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Breadcrumbs, BreadcrumbItem, Tab, Tabs, Spinner, Spacer, Input, SelectItem, Textarea, Card, CardBody, CardFooter, Image, Button } from "@nextui-org/react";
-import { Icon } from "@iconify/react";
+import { signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useAccount, useWriteContract } from "wagmi";
+import { Breadcrumbs, BreadcrumbItem, Tab, Tabs, Spinner, Spacer, Input } from "@nextui-org/react";
 
 import TabImage from "./components/tabs/TabImage";
 import TabVideo from "./components/tabs/TabVideo";
@@ -9,32 +11,53 @@ import TabMusic from "./components/tabs/TabMusic";
 import ImageCard from "./components/ImageCard";
 import PrimaryButton from "@/lib/components/button/PrimaryButton";
 
+import NFTABI from "@/lib/web3/contracts/NYWNFT.json";
+
 enum WorkingTabs {
   Image = "image",
   Video = "video",
   Music = "music",
 }
 
-let width = 0;
-let height = 0;
-
-const handleRatioSelect = (w: number, h: number) => {
-  width = w;
-  height = h;
-};
+const MARKET_ADDRESS = (
+  process.env.NEXT_PUBLIC_MARKET_ADDRESS
+) as `0x${string}`;
 
 const CreateNFT = () => {
+  const router = useRouter()
+  const { data } = useSession();
+  const { isConnected, address } = useAccount();
+
+  const { writeContractAsync: mintNFTAsync } = useWriteContract()
+
   const [activeTab, setActiveTab] = useState<WorkingTabs>(WorkingTabs.Image);
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [genImg, setGenImg] = useState<any[]>([]);
-  const [selectedList, setSelectedList] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(0);
   const [isCreating, setIsCreating] = useState(false);
   const [inputText, setInputText] = useState("");
   const [model_id, setModel_id] = useState('');
+  const [imageSize, setImageSize] = useState(0);
+
+  const [nftName, setNftName] = useState("");
+
+  const imageSizeArr = [
+    { width: 1024, height: 1024 },
+    { width: 1024, height: 768 },
+    { width: 768, height: 1024 },
+    { width: 1024, height: 576 },
+    { width: 576, height: 1024 },
+  ]
 
   useEffect(() => {
+    console.log(data, address, isConnected)
+    if (data?.provider !== "siwe" || (isConnected === false && !address)) {
+      signOut({
+        redirect: false
+      })
+      router.push("/signin");
+    }
     const divElement = document.getElementById("detailed-container");
-    console.log(divElement)
     if(divElement) {
       window.scrollTo({
         top: divElement.getBoundingClientRect().top + window.pageYOffset - 120,
@@ -53,8 +76,8 @@ const CreateNFT = () => {
       prompt: inputText,
       model_id: model_id,
       negative_prompt: "bad quality",
-      width: width,
-      height: height,
+      width: imageSizeArr[imageSize-1].width,
+      height: imageSizeArr[imageSize-1].height,
       safety_checker: false,
       seed: null,
       num_inference_steps: "31",
@@ -84,8 +107,6 @@ const CreateNFT = () => {
       redirect: "follow"
     };
 
-
-
     fetch("https://modelslab.com/api/v6/images/text2img", requestOptions)
       .then((response) => response.text())
       .then((result) => {
@@ -103,6 +124,90 @@ const CreateNFT = () => {
       })
       .catch((error) => console.log("error", error));
   };
+
+  const token = process.env.NEXT_PUBLIC_PINATA_JWT;
+
+  const uploadJSONToIPFS = async (JSONBody: any) => {
+    const url = `https://api.pinata.cloud/pinning/pinJSONToIPFS`;
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(JSONBody)
+      });
+      
+      const data: any = res.json();
+    
+      return {
+        success: true,
+        pinataURL: `https://gateway.pinata.cloud/ipfs/${data.IpfsHash}`
+      };
+    } catch (error: any) {
+      console.error(error.message);
+      return {
+        success: false,
+        message: error.message,
+      };
+    }
+  };
+  
+  const uploadMetadata = async (nftName: string, nftAssetURL: string) => {
+    console.log(nftName, nftAssetURL)
+    return new Promise(async (resolve, reject) => {
+      if (!nftName || !nftAssetURL) {
+        reject(new Error("Missing nftColName or nftFileURL"));
+        return;
+      }
+
+      const nftJSON = {
+        name: nftName,
+        image: nftAssetURL, 
+        description: "Your NFT description here", // Add a description field if you want
+        attributes: [], // Add any custom attributes you want here
+      };
+
+      console.log("Json", nftJSON)
+      try {
+        const res = await uploadJSONToIPFS(nftJSON); // Since uploadJSONToIPFS looks like an async function
+        if (res.success === true) {
+          resolve(res);
+        } else {
+          throw new Error('Uploading to Pinata failed');
+        }
+      } catch (err) {
+        reject(err);
+      }
+    });
+  }
+
+
+  const mintNow = async () => {
+    if (nftName === "" || genImg[selectedImage] === "") {
+      alert("Select image and insert nft name");
+      return;
+    } else {
+      const uploadRes: any = await uploadMetadata(nftName, genImg[selectedImage]);
+      console.log(uploadRes)
+      if (uploadRes.success === true) {
+        const metadataURL = uploadRes?.pinataURL
+
+        try {
+          const tx2 = await mintNFTAsync({
+            address: MARKET_ADDRESS,
+            abi: NFTABI,
+            functionName: "create",
+            args: [metadataURL],
+          });
+          console.log(tx2)
+        } catch (err) {
+          console.log(err)
+        }
+      }
+    }
+  }
 
   return (
     <div >
@@ -163,7 +268,13 @@ const CreateNFT = () => {
                 />
               </Tabs>
               {
-                <TabImage modelSetter={setModel_id} onSelect={handleRatioSelect} inputText={inputText} setInputText={setInputText} /> ||
+                <TabImage 
+                  modelSetter={setModel_id} 
+                  inputText={inputText} 
+                  setInputText={setInputText} 
+                  imageSize={imageSize}
+                  setImageSize={setImageSize}
+                /> ||
                 activeTab == WorkingTabs.Video && <TabVideo /> ||
                 activeTab == WorkingTabs.Music && <TabMusic />
               }
@@ -175,9 +286,9 @@ const CreateNFT = () => {
                     //isLoading={isGenerating}
                   />
                 </div>
-                <p className="text-center">Cost: 2 $cNFP</p>
+                <p className="text-center">Cost: 2 $cNYW</p>
                 <div className="py-2 bg-white/5 text-xs text-center rounded-md">
-                  You don't have enough $cNFP to create. Get More $cNFP
+                  You don't have enough $cNYW to create. Get More $cNYW
                 </div>
               </div>
             </div>
@@ -198,36 +309,35 @@ const CreateNFT = () => {
                       <Spinner label="Loading..." size="lg" style={{ color: '#15BFFD', background: 'transparent'}} />
                     ) : (
                       <div className="w-full">
-                        <div className="grid grid-cols-3 gap-3">
+                        <div className="grid lg:grid-cols-3 gap-3">
                           {genImg.length === 3 && genImg.map((item, id) => {
                             return (
-                              <div key={id}>
-                                <ImageCard
-                                  selectedList={selectedList}
-                                  setSelectedList={setSelectedList}
-                                  imgSrc={item}
-                                />
-                              </div>
+                              <ImageCard
+                                id={id}
+                                selectedImage={selectedImage}
+                                setSelectedImage={setSelectedImage}
+                                imgSrc={item}
+                              />
                             );
                           })}
                         </div>
-                        <Spacer y={2} />
+                        <Spacer y={6} />
                           {!isCreating ? (
                             <div></div>
                           ) : (
                             <Input
                               aria-label="Search"
                               classNames={{
-                                inputWrapper: "w-full h-full bg-white/10 py-2 text-lg",
+                                inputWrapper: "w-full h-full bg-white/10 py-2",
+                                input: "text-lg"
                               }}
+                              value={nftName}
+                              onChange={(e) => setNftName(e.target.value)}
                               labelPlacement="outside"
-                              placeholder="Search Prompts"
+                              placeholder="Input your NFT name"
                               radius="sm"
-                              startContent={
-                                <span>Name:</span>
-                              }
                               endContent={
-                                <PrimaryButton text="Name" />
+                                <PrimaryButton onClick={mintNow} text="Mint Now" />
                               }
                             />
                           )}
