@@ -12,6 +12,9 @@ import ImageCard from "./components/ImageCard";
 import PrimaryButton from "@/lib/components/button/PrimaryButton";
 
 import NFTABI from "@/lib/web3/contracts/NYWNFT.json";
+import { GalleryIcon } from "./components/icons/GalleryIcon";
+import { VideoIcon } from "./components/icons/VideoIcon";
+import { MusicIcon } from "./components/icons/MusicIcon";
 
 enum WorkingTabs {
   Image = "image",
