@@ -36,7 +36,7 @@ export default function TabImage({ modelSetter, inputText, setInputText, imageSi
     <div className="prompt-container py-6 divide-y-1 divide-white/10">
       <div>
         <div className="mb-5">
-          <p className="mb-1">Select Model</p>
+          <p className="mb-1">Choose a model</p>
           <Select
             variant="bordered"
             aria-label="select"
@@ -54,12 +54,12 @@ export default function TabImage({ modelSetter, inputText, setInputText, imageSi
           </Select>
         </div>
         <div className="mb-5">
-          <p className="mb-1">Image Prompt</p>
+          <p className="mb-1">Image Upload</p>
           <ImageUploader />
         </div>
         <div className="mb-5">
           <div className="mb-1 flex justify-between">
-            <p>Text Prompt</p>
+            <p>Image Prompt</p>
             <p>Random Prompt</p>
           </div>
           <Textarea
@@ -91,8 +91,8 @@ export default function TabImage({ modelSetter, inputText, setInputText, imageSi
                     handleCardClick(style.model_id);
                   }}
                   height={200}
-                  src={`/asset/style${index + 1}.png`}
                   width={200}
+                  src={`/asset/style${index + 1}.png`}
                 />
                 <CardFooter className="p-0 justify-center absolute bottom-1 z-10">
                   <p className="text-tiny text-white/80">{style.name}</p>
