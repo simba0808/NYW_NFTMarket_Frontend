@@ -4,7 +4,7 @@ import { ChangeEvent, useRef, useState } from "react";
 export default function ImageUploader() {
   const uploadInputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string | null>(null); // Changed the type of preview to string | null
+  const [preview, setPreview] = useState<string | null>(null); 
 
   const onFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files && event.target.files[0];
@@ -13,19 +13,22 @@ export default function ImageUploader() {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setPreview(reader.result as string); // Cast the result to string
+        setPreview(reader.result as string); 
+        console.log(reader.result); 
       };
       reader.readAsDataURL(file);
     }
   };
   
+
   return (
     <div
       onClick={() => {
         uploadInputRef.current && uploadInputRef.current.click();
       }}
-      className={` max-w-sm p-2 py-4 mb-4 ${preview ? "" : "bg-[#252840]"
-        } rounded-lg items-center mx-auto text-center cursor-pointer`}
+      className={` max-w-sm p-2 py-4 mb-4 ${
+        preview ? "" : "bg-[#252840]"
+      } rounded-lg items-center mx-auto text-center cursor-pointer`}
     >
       <input
         id="upload"
@@ -43,7 +46,8 @@ export default function ImageUploader() {
         />
       ) : (
         <>
-          <label htmlFor="upload" className="cursor-pointer">
+        <label htmlFor="upload" className="cursor-pointer"></label>
+          <button>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -68,7 +72,7 @@ export default function ImageUploader() {
               id="filename"
               className="text-gray-500 bg-gray-200 z-50"
             ></span>
-          </label>
+          </button>
           <span id="filename" className="text-gray-500 bg-gray-200 z-50">
             {file ? file.name : ""}
           </span>

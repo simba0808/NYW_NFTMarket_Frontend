@@ -36,6 +36,7 @@
 		"@web3modal/wagmi": "^4.2.3",
 		"add": "^2.0.6",
 		"autoprefixer": "10.4.19",
+		"axios": "^1.7.2",
 		"clsx": "^2.1.1",
 		"eslint": "^8.56.0",
 		"eslint-config-next": "14.2.1",

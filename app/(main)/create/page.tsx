@@ -62,69 +62,76 @@ const CreateNFT = () => {
   }, []);
 
   const [isLoading, setIsLoading] = useState(false);
-  const GenerateImage = () => {
-    setIsGenerating(true);
-    setIsLoading(true);
-    var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
+const GenerateImage = () => {
+  setIsGenerating(true);
+  setIsLoading(true);
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
 
-    var raw = JSON.stringify({
-      key: "gkHp5WXV99e8TKY8R4ctMcnYED7p4twNXZ2BX85V8FFh9FmcGOhMiBx4KMIw",
-      prompt: inputText,
-      model_id: model_id,
-      negative_prompt: "bad quality",
-      width: width,
-      height: height,
-      safety_checker: false,
-      seed: null,
-      num_inference_steps: "31",
-      enhance_prompt: true,
-      guidance_scale: 7.5,
-      multi_lingual: true,
-      panorama: true,
-      self_attention: true,
-      upscale: "no",
-      embeddings_model: null,
-      lora_model: null,
-      tomesd: "yes",
-      clip_skip: "2",
-      use_karras_sigmas: true,
-      vae: null,
-      lora_strength: null,
-      scheduler: "UniPCMultistepScheduler",
-      samples: 3,
-      base64: false,
-      webhook: null,
-      track_id: null,
-    });
-    const requestOptions: RequestInit = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
+  var raw = JSON.stringify({
+    key: "gkHp5WXV99e8TKY8R4ctMcnYED7p4twNXZ2BX85V8FFh9FmcGOhMiBx4KMIw",
+    prompt: inputText,
+    model_id: model_id,
+    init_image: "",
+    negative_prompt: "bad quality",
+    width: width,
+    height: height,
+    safety_checker: false,
+    seed: null,
+    num_inference_steps: "31",
+    enhance_prompt: true,
+    guidance_scale: 7.5,
+    multi_lingual: true,
+    panorama: true,
+    self_attention: true,
+    upscale: "no",
+    embeddings_model: null,
+    lora_model: null,
+    tomesd: "yes",
+    clip_skip: "2",
+    use_karras_sigmas: true,
+    vae: null,
+    lora_strength: null,
+    scheduler: "UniPCMultistepScheduler",
+    samples: 3,
+    base64: false,
+    webhook: null,
+    track_id: null,
+  });
 
-    fetch("https://modelslab.com/api/v6/images/text2img", requestOptions)
-      .then((response) => response.text())
-      .then((result) => {
-        const resultImage = JSON.parse(result);
-        console.log(resultImage);
-        if (resultImage.status === "error") {
-          // showToast("error", resultImage.message);
-          return;
-        }
-
-        const imageData = resultImage.output;
-        console.log({ imageData });
-        setGenImg([imageData[0], imageData[1], imageData[2]]);
-        setIsGenerating(false);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.log("error", error);
-        setIsLoading(false); // also set loading state back to false when there's an error
-      });
+  const requestOptions: RequestInit = {
+    method: "POST",
+    headers: myHeaders,
+    body: raw,
+    redirect: "follow",
   };
+
+  fetch("https://modelslab.com/api/v6/images/text2img", requestOptions)
+    .then((response) => response.json())
+    .then((result) => {
+      if (result.status === "processing") {
+        console.log("Image is still processing. Please check back later.");
+        return;
+      }
+
+      const resultImage = result;
+      console.log(resultImage);
+      if (resultImage.status === "error") {
+        // showToast("error", resultImage.message);
+        return;
+      }
+
+      const imageData = resultImage.output;
+      console.log({ imageData });
+      setGenImg([imageData[0], imageData[1], imageData[2]]);
+      setIsGenerating(false);
+      setIsLoading(false);
+    })
+    .catch((error) => {
+      console.log("error", error);
+      setIsLoading(false); // also set loading state back to false when there's an error
+    });
+};
 
   return (
     <div>

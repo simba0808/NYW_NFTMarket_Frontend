@@ -24,7 +24,7 @@ export default function ImageCard(props: any) {
         alt="Failed"
         className="object-cover hover:cursor-pointer"
         src={imgSrc}
-        onClick={() => handleClick()} // Added onClick handler to the Image
+        onClick={() => handleClick()}
       />
       <div className="absolute z-10 pt-1 pl-1">
         <Button
