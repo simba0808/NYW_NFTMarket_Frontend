@@ -222,9 +222,9 @@ const GenerateImage = () => {
                     isLoading={isLoading}
                   />
                 </div>
-                <p className="text-center">Cost: 2 $cNFP</p>
+                <p className="text-center">Cost: 2 $cNYWP</p>
                 <div className="py-2 bg-white/5 text-xs text-center rounded-md">
-                  You don't have enough $cNFP to create. Get More $cNFP
+                  You don't have enough $cNFP to create. Get More $cNYWP
                 </div>
               </div>
             </div>
