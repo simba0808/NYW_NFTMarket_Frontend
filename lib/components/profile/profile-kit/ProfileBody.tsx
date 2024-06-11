@@ -1,4 +1,5 @@
 import { Icon } from "@iconify/react";
+import { useRouter } from "next/navigation";
 
 import useAuthSession from "@/lib/auth/hooks/useAuthSession";
 
@@ -23,10 +24,11 @@ const ProfileButton = ({
 
 const ProfileBody = () => {
   const { disconnectAccount } = useAuthSession();
+  const router = useRouter();
 
   return (
     <div className="flex flex-col gap-1 px-2 py-3">
-      <ProfileButton text="My Profile"  icon="lucide:user-round" />
+      <ProfileButton text="My Profile"  icon="lucide:user-round"  onClick={() => router.push("/profile")} />
       <ProfileButton text="Settings"  icon="lets-icons:setting-line-light" />
       <ProfileButton text="Logout"  icon="majesticons:logout-line" onClick={disconnectAccount} />
     </div>

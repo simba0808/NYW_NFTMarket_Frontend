@@ -1,6 +1,15 @@
+import { useBalance, useAccount } from "wagmi";
 import { Icon } from "@iconify/react";
 
+import TokenList from "./TokenList.json";
+
 export default function ProfileFooter() {
+  const { address } = useAccount();
+
+  const { data: ethOnWallet } = useBalance({
+    address: address,
+  })
+
   return (
     <div className="py-2 pb-4">
       <div className="px-4">
@@ -9,7 +18,9 @@ export default function ProfileFooter() {
             <span><Icon icon="mingcute:binance-coin-bnb-fill" className="w-6 h-6" /></span>
             <span>ETH</span>
           </span>
-          <span>0.00</span>
+          <span>
+            {Number(ethOnWallet?.formatted || 0).toLocaleString(undefined, {minimumFractionDigits: 3})}
+          </span>
         </div>
       </div>
       <div className="mt-2 px-4">

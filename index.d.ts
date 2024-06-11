@@ -1,0 +1,1 @@
+type Provider = 'siwe' | 'google';

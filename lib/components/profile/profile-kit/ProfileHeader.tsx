@@ -2,30 +2,36 @@
 import { useCallback, useState } from "react";
 import { useAccount } from "wagmi";
 import {Icon} from "@iconify/react";
+import { twMerge } from "tailwind-merge";
 
 import EthereumIcon from "@/public/ethereum.svg";
 
-
-function shortenAddress(address: string) {
-  return `${address.slice(0, 6)}...${address.slice(-4)}`;
-}
-
-const AddressDisplay = ({address}: {address: string}) => {
-  return (
-    <span>{shortenAddress(address)}</span>
-  );
-}
-
-const CopyLink = ({url}: {url: string}) => {
+export const CopyLink = ({className, url}: {className?:string; url: string}) => {
   const [copied, setCopied] = useState(false);
 
   const onClickHandler = useCallback(() => {
     window.navigator.clipboard.writeText(url);
     setCopied(true);
-  }, [url])
+  }, [url]);
 
+  function shortenAddress(address: string) {
+    return `${address.slice(0, 6)}...${address.slice(-4)}`;
+  }
+  
+  const AddressDisplay = ({address}: {address: string}) => {
+    return (
+      <span>{shortenAddress(address)}</span>
+    );
+  }
+  
   return (
-    <div className="flex gap-1 items-center" onClick={onClickHandler}>
+    <div 
+      className={twMerge(
+        "flex gap-1 items-center",
+        className
+      )} 
+      onClick={onClickHandler}
+    >
         {
           copied ? 
             <Icon

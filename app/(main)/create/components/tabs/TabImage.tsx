@@ -11,13 +11,10 @@ import {
 
 import ImageUploader from "../ImageUploader";
 import RatioCard from "../RatioCard";
+export default function TabImage({ modelSetter, inputText, setInputText, imageSize, setImageSize }: any) {
 
-export default function TabImage({
-  modelSetter,
-  inputText,
-  setInputText,
-  onSelect,
-}: any) {
+export default function TabImage({ modelSetter, inputText, setInputText, imageSize, setImageSize }: any) {
+
   const models = [
     { key: "Stable Diffusion", label: "Stable Diffusion" },
     { key: "Midjourney", label: "Midjourney" },
@@ -35,19 +32,11 @@ export default function TabImage({
     { name: "Film", model_id: "realistic-vision-v40" },
   ];
 
-  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(
-    null
-  );
-  const [selectedRatioIndex, setSelectRatioIndex] = useState<number | null>(
-    null
-  );
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
 
   const handleCardClick = (model_id: string) => {
     console.log(model_id);
     modelSetter(model_id);
-  };
-  const handleRatioClick = (index: number, width: number, height: number) => {
-    setSelectRatioIndex(index);
   };
 
   return (
@@ -126,12 +115,11 @@ export default function TabImage({
           <p className="mb-1">Aspect Ratios</p>
           <div className="grid grid-cols-6 gap-3">
             {[1, 2, 3, 4, 5].map((size, index) => (
-              <RatioCard
+              <RatioCard 
                 key={index}
-                size={size}
-                onSelect={(width, height) =>
-                  handleRatioClick(index, width, height)
-                }
+                size={size} 
+                imageSize={imageSize}
+                setImageSize={setImageSize}
               />
             ))}
           </div>

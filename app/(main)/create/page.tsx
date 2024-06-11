@@ -1,31 +1,20 @@
 "use client";
 import { useEffect, useState } from "react";
-import {
-  Breadcrumbs,
-  BreadcrumbItem,
-  Tab,
-  Tabs,
-  Spinner,
-  Spacer,
-  Input,
-  SelectItem,
-  Textarea,
-  Card,
-  CardBody,
-  CardFooter,
-  Image,
-  Button,
-} from "@nextui-org/react";
-import { Icon } from "@iconify/react";
+import { signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useAccount, useWriteContract } from "wagmi";
+import { Breadcrumbs, BreadcrumbItem, Tab, Tabs, Spinner, Spacer, Input } from "@nextui-org/react";
 
 import TabImage from "./components/tabs/TabImage";
 import TabVideo from "./components/tabs/TabVideo";
 import TabMusic from "./components/tabs/TabMusic";
 import ImageCard from "./components/ImageCard";
 import PrimaryButton from "@/lib/components/button/PrimaryButton";
+
+import NFTABI from "@/lib/web3/contracts/NYWNFT.json";
 import { GalleryIcon } from "./components/icons/GalleryIcon";
-import { MusicIcon } from "./components/icons/MusicIcon";
 import { VideoIcon } from "./components/icons/VideoIcon";
+import { MusicIcon } from "./components/icons/MusicIcon";
 
 enum WorkingTabs {
   Image = "image",
@@ -33,27 +22,46 @@ enum WorkingTabs {
   Music = "music",
 }
 
-let width = 0;
-let height = 0;
-
-const handleRatioSelect = (w: number, h: number) => {
-  width = w;
-  height = h;
-};
+const MARKET_ADDRESS = (
+  process.env.NEXT_PUBLIC_MARKET_ADDRESS
+) as `0x${string}`;
 
 const CreateNFT = () => {
+  const router = useRouter()
+  const { data } = useSession();
+  const { isConnected, address } = useAccount();
+
+  const { writeContractAsync: mintNFTAsync } = useWriteContract()
+
   const [activeTab, setActiveTab] = useState<WorkingTabs>(WorkingTabs.Image);
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [genImg, setGenImg] = useState<any[]>([]);
-  const [selectedList, setSelectedList] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(0);
   const [isCreating, setIsCreating] = useState(false);
   const [inputText, setInputText] = useState("");
-  const [model_id, setModel_id] = useState("");
+  const [model_id, setModel_id] = useState('');
+  const [imageSize, setImageSize] = useState(0);
+
+  const [nftName, setNftName] = useState("");
+
+  const imageSizeArr = [
+    { width: 1024, height: 1024 },
+    { width: 1024, height: 768 },
+    { width: 768, height: 1024 },
+    { width: 1024, height: 576 },
+    { width: 576, height: 1024 },
+  ]
 
   useEffect(() => {
+    console.log(data, address, isConnected)
+    if (data?.provider !== "siwe" || (isConnected === false && !address)) {
+      signOut({
+        redirect: false
+      })
+      router.push("/signin");
+    }
     const divElement = document.getElementById("detailed-container");
-    console.log(divElement);
-    if (divElement) {
+    if(divElement) {
       window.scrollTo({
         top: divElement.getBoundingClientRect().top + window.pageYOffset - 120,
         behavior: "smooth", // Optional: Add smooth scrolling effect
@@ -67,44 +75,48 @@ const GenerateImage = () => {
   setIsLoading(true);
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
+  const [isLoading, setIsLoading] = useState(false);
+  const GenerateImage = () => {
+    setIsGenerating(true);
+    setIsLoading(true);
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
 
-  var raw = JSON.stringify({
-    key: "gkHp5WXV99e8TKY8R4ctMcnYED7p4twNXZ2BX85V8FFh9FmcGOhMiBx4KMIw",
-    prompt: inputText,
-    model_id: model_id,
-    init_image: "",
-    negative_prompt: "bad quality",
-    width: width,
-    height: height,
-    safety_checker: false,
-    seed: null,
-    num_inference_steps: "31",
-    enhance_prompt: true,
-    guidance_scale: 7.5,
-    multi_lingual: true,
-    panorama: true,
-    self_attention: true,
-    upscale: "no",
-    embeddings_model: null,
-    lora_model: null,
-    tomesd: "yes",
-    clip_skip: "2",
-    use_karras_sigmas: true,
-    vae: null,
-    lora_strength: null,
-    scheduler: "UniPCMultistepScheduler",
-    samples: 3,
-    base64: false,
-    webhook: null,
-    track_id: null,
-  });
-
-  const requestOptions: RequestInit = {
-    method: "POST",
-    headers: myHeaders,
-    body: raw,
-    redirect: "follow",
-  };
+    var raw = JSON.stringify({
+      key: "gkHp5WXV99e8TKY8R4ctMcnYED7p4twNXZ2BX85V8FFh9FmcGOhMiBx4KMIw",
+      prompt: inputText,
+      model_id: model_id,
+      negative_prompt: "bad quality",
+      width: imageSizeArr[imageSize-1].width,
+      height: imageSizeArr[imageSize-1].height,
+      safety_checker: false,
+      seed: null,
+      num_inference_steps: "31",
+      enhance_prompt: true,
+      guidance_scale: 7.5,
+      multi_lingual: true,
+      panorama: true,
+      self_attention: true,
+      upscale: "no",
+      embeddings_model: null,
+      lora_model: null,
+      tomesd: "yes",
+      clip_skip: "2",
+      use_karras_sigmas: true,
+      vae: null,
+      lora_strength: null,
+      scheduler: "UniPCMultistepScheduler",
+      samples: 3,
+      base64: false,
+      webhook: null,
+      track_id: null,
+    });
+    const requestOptions: RequestInit = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
 
   fetch("https://modelslab.com/api/v6/images/text2img", requestOptions)
     .then((response) => response.json())
@@ -121,17 +133,98 @@ const GenerateImage = () => {
         return;
       }
 
-      const imageData = resultImage.output;
-      console.log({ imageData });
-      setGenImg([imageData[0], imageData[1], imageData[2]]);
-      setIsGenerating(false);
-      setIsLoading(false);
-    })
-    .catch((error) => {
-      console.log("error", error);
-      setIsLoading(false); // also set loading state back to false when there's an error
+        const imageData = resultImage.output;
+        console.log({ imageData });
+        setGenImg([imageData[0], imageData[1], imageData[2]]);
+        setIsGenerating(false);
+        setIsLoading(false);
+      })
+      .catch((error) => console.log("error", error));
+  };
+
+  const token = process.env.NEXT_PUBLIC_PINATA_JWT;
+
+  const uploadJSONToIPFS = async (JSONBody: any) => {
+    const url = `https://api.pinata.cloud/pinning/pinJSONToIPFS`;
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(JSONBody)
+      });
+      
+      const data: any = res.json();
+    
+      return {
+        success: true,
+        pinataURL: `https://gateway.pinata.cloud/ipfs/${data.IpfsHash}`
+      };
+    } catch (error: any) {
+      console.error(error.message);
+      return {
+        success: false,
+        message: error.message,
+      };
+    }
+  };
+  
+  const uploadMetadata = async (nftName: string, nftAssetURL: string) => {
+    console.log(nftName, nftAssetURL)
+    return new Promise(async (resolve, reject) => {
+      if (!nftName || !nftAssetURL) {
+        reject(new Error("Missing nftColName or nftFileURL"));
+        return;
+      }
+
+      const nftJSON = {
+        name: nftName,
+        image: nftAssetURL, 
+        description: "Your NFT description here", // Add a description field if you want
+        attributes: [], // Add any custom attributes you want here
+      };
+
+      console.log("Json", nftJSON)
+      try {
+        const res = await uploadJSONToIPFS(nftJSON); // Since uploadJSONToIPFS looks like an async function
+        if (res.success === true) {
+          resolve(res);
+        } else {
+          throw new Error('Uploading to Pinata failed');
+        }
+      } catch (err) {
+        reject(err);
+      }
     });
-};
+  }
+
+
+  const mintNow = async () => {
+    if (nftName === "" || genImg[selectedImage] === "") {
+      alert("Select image and insert nft name");
+      return;
+    } else {
+      const uploadRes: any = await uploadMetadata(nftName, genImg[selectedImage]);
+      console.log(uploadRes)
+      if (uploadRes.success === true) {
+        const metadataURL = uploadRes?.pinataURL
+
+        try {
+          const tx2 = await mintNFTAsync({
+            address: MARKET_ADDRESS,
+            abi: NFTABI,
+            functionName: "create",
+            args: [metadataURL],
+          });
+          console.log(tx2)
+        } catch (err) {
+          console.log(err)
+        }
+      }
+    }
+  }
 
   return (
     <div>
@@ -201,16 +294,17 @@ const GenerateImage = () => {
                   }
                 />
               </Tabs>
-              {(
-                <TabImage
-                  modelSetter={setModel_id}
-                  onSelect={handleRatioSelect}
-                  inputText={inputText}
-                  setInputText={setInputText}
-                />
-              ) ||
-                (activeTab == WorkingTabs.Video && <TabVideo />) ||
-                (activeTab == WorkingTabs.Music && <TabMusic />)}
+              {
+                <TabImage 
+                  modelSetter={setModel_id} 
+                  inputText={inputText} 
+                  setInputText={setInputText} 
+                  imageSize={imageSize}
+                  setImageSize={setImageSize}
+                /> ||
+                activeTab == WorkingTabs.Video && <TabVideo /> ||
+                activeTab == WorkingTabs.Music && <TabMusic />
+              }
               <div className="flex flex-col gap-3 py-6">
                 <div className="flex justify-center">
                   <PrimaryButton
@@ -222,9 +316,9 @@ const GenerateImage = () => {
                     isLoading={isLoading}
                   />
                 </div>
-                <p className="text-center">Cost: 2 $cNYWP</p>
+                <p className="text-center">Cost: 2 $cNYW</p>
                 <div className="py-2 bg-white/5 text-xs text-center rounded-md">
-                  You don't have enough $cNFP to create. Get More $cNYWP
+                  You don't have enough $cNYW to create. Get More $cNYW
                 </div>
               </div>
             </div>
@@ -256,37 +350,38 @@ const GenerateImage = () => {
                       />
                     ) : (
                       <div className="w-full">
-                        <div className="grid grid-cols-3 gap-3">
-                          {genImg.length === 3 &&
-                            genImg.map((item, id) => {
-                              return (
-                                <div key={id}>
-                                  <ImageCard
-                                    selectedList={selectedList}
-                                    setSelectedList={setSelectedList}
-                                    imgSrc={item}
-                                  />
-                                </div>
-                              );
-                            })}
+                        <div className="grid lg:grid-cols-3 gap-3">
+                          {genImg.length === 3 && genImg.map((item, id) => {
+                            return (
+                              <ImageCard
+                                id={id}
+                                selectedImage={selectedImage}
+                                setSelectedImage={setSelectedImage}
+                                imgSrc={item}
+                              />
+                            );
+                          })}
                         </div>
-                        <Spacer y={2} />
-                        {!isCreating ? (
-                          <div></div>
-                        ) : (
-                          <Input
-                            aria-label="Search"
-                            classNames={{
-                              inputWrapper:
-                                "w-full h-full bg-white/10 py-2 text-lg",
-                            }}
-                            labelPlacement="outside"
-                            placeholder="Search Prompts"
-                            radius="sm"
-                            startContent={<span>Name:</span>}
-                            endContent={<PrimaryButton text="Name" />}
-                          />
-                        )}
+                        <Spacer y={6} />
+                          {!isCreating ? (
+                            <div></div>
+                          ) : (
+                            <Input
+                              aria-label="Search"
+                              classNames={{
+                                inputWrapper: "w-full h-full bg-white/10 py-2",
+                                input: "text-lg"
+                              }}
+                              value={nftName}
+                              onChange={(e) => setNftName(e.target.value)}
+                              labelPlacement="outside"
+                              placeholder="Input your NFT name"
+                              radius="sm"
+                              endContent={
+                                <PrimaryButton onClick={mintNow} text="Mint Now" />
+                              }
+                            />
+                          )}
                       </div>
                     )}
                   </div>
