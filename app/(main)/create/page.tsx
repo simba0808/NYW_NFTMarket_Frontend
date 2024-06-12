@@ -45,11 +45,11 @@ const CreateNFT = () => {
   const [nftName, setNftName] = useState("");
 
   const imageSizeArr = [
-    { width: 1024, height: 1024 },
-    { width: 1024, height: 768 },
-    { width: 768, height: 1024 },
-    { width: 1024, height: 576 },
-    { width: 576, height: 1024 },
+    { width: 512, height: 512 },
+    { width: 512, height: 384 },
+    { width: 384, height: 512 },
+    { width: 512, height: 288 },
+    { width: 288, height: 512 },
   ]
 
   useEffect(() => {
