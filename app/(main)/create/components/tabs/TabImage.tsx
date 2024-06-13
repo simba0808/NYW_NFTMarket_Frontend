@@ -13,8 +13,6 @@ import ImageUploader from "../ImageUploader";
 import RatioCard from "../RatioCard";
 export default function TabImage({ modelSetter, inputText, setInputText, imageSize, setImageSize }: any) {
 
-export default function TabImage({ modelSetter, inputText, setInputText, imageSize, setImageSize }: any) {
-
   const models = [
     { key: "Stable Diffusion", label: "Stable Diffusion" },
     { key: "Midjourney", label: "Midjourney" },

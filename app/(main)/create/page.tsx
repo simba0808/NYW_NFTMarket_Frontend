@@ -3,7 +3,15 @@ import { useEffect, useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useAccount, useWriteContract } from "wagmi";
-import { Breadcrumbs, BreadcrumbItem, Tab, Tabs, Spinner, Spacer, Input } from "@nextui-org/react";
+import {
+  Breadcrumbs,
+  BreadcrumbItem,
+  Tab,
+  Tabs,
+  Spinner,
+  Spacer,
+  Input,
+} from "@nextui-org/react";
 
 import TabImage from "./components/tabs/TabImage";
 import TabVideo from "./components/tabs/TabVideo";
@@ -22,16 +30,14 @@ enum WorkingTabs {
   Music = "music",
 }
 
-const MARKET_ADDRESS = (
-  process.env.NEXT_PUBLIC_MARKET_ADDRESS
-) as `0x${string}`;
+const MARKET_ADDRESS = process.env.NEXT_PUBLIC_MARKET_ADDRESS as `0x${string}`;
 
 const CreateNFT = () => {
-  const router = useRouter()
+  const router = useRouter();
   const { data } = useSession();
   const { isConnected, address } = useAccount();
 
-  const { writeContractAsync: mintNFTAsync } = useWriteContract()
+  const { writeContractAsync: mintNFTAsync } = useWriteContract();
 
   const [activeTab, setActiveTab] = useState<WorkingTabs>(WorkingTabs.Image);
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
@@ -39,8 +45,9 @@ const CreateNFT = () => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [isCreating, setIsCreating] = useState(false);
   const [inputText, setInputText] = useState("");
-  const [model_id, setModel_id] = useState('');
+  const [model_id, setModel_id] = useState("");
   const [imageSize, setImageSize] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [nftName, setNftName] = useState("");
 
@@ -50,18 +57,18 @@ const CreateNFT = () => {
     { width: 384, height: 512 },
     { width: 512, height: 288 },
     { width: 288, height: 512 },
-  ]
+  ];
 
   useEffect(() => {
-    console.log(data, address, isConnected)
+    console.log(data, address, isConnected);
     if (data?.provider !== "siwe" || (isConnected === false && !address)) {
       signOut({
-        redirect: false
-      })
+        redirect: false,
+      });
       router.push("/signin");
     }
     const divElement = document.getElementById("detailed-container");
-    if(divElement) {
+    if (divElement) {
       window.scrollTo({
         top: divElement.getBoundingClientRect().top + window.pageYOffset - 120,
         behavior: "smooth", // Optional: Add smooth scrolling effect
@@ -69,48 +76,41 @@ const CreateNFT = () => {
     }
   }, []);
 
-  const [isLoading, setIsLoading] = useState(false);
-const GenerateImage = () => {
-  setIsGenerating(true);
-  setIsLoading(true);
-  var myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
-  const [isLoading, setIsLoading] = useState(false);
-  const GenerateImage = () => {
+  const GenerateImage = async () => {
     setIsGenerating(true);
     setIsLoading(true);
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-
     var raw = JSON.stringify({
       key: "gkHp5WXV99e8TKY8R4ctMcnYED7p4twNXZ2BX85V8FFh9FmcGOhMiBx4KMIw",
       prompt: inputText,
       model_id: model_id,
       negative_prompt: "bad quality",
-      width: imageSizeArr[imageSize-1].width,
-      height: imageSizeArr[imageSize-1].height,
+      width: imageSizeArr[imageSize - 1].width,
+      height: imageSizeArr[imageSize - 1].height,
       safety_checker: false,
       seed: null,
-      num_inference_steps: "31",
+      num_inference_steps: "21",
       enhance_prompt: true,
       guidance_scale: 7.5,
-      multi_lingual: true,
-      panorama: true,
-      self_attention: true,
+      multi_lingual: false,
+      panorama: false,
+      self_attention: false,
       upscale: "no",
       embeddings_model: null,
       lora_model: null,
       tomesd: "yes",
       clip_skip: "2",
-      use_karras_sigmas: true,
+      use_karras_sigmas: false,
       vae: null,
       lora_strength: null,
-      scheduler: "UniPCMultistepScheduler",
+      // scheduler: "UniPCMultistepScheduler",
       samples: 3,
       base64: false,
       webhook: null,
       track_id: null,
     });
+
     const requestOptions: RequestInit = {
       method: "POST",
       headers: myHeaders,
@@ -118,28 +118,71 @@ const GenerateImage = () => {
       redirect: "follow",
     };
 
-  fetch("https://modelslab.com/api/v6/images/text2img", requestOptions)
-    .then((response) => response.json())
-    .then((result) => {
-      if (result.status === "processing") {
-        console.log("Image is still processing. Please check back later.");
-        return;
-      }
+    fetch("https://modelslab.com/api/v6/images/text2img", requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result);
 
-      const resultImage = result;
-      console.log(resultImage);
-      if (resultImage.status === "error") {
-        // showToast("error", resultImage.message);
-        return;
-      }
+        if (result.status === "success") {
+          console.log("Image generation successful");
+          setGenImg([result.output[0], result.output[1], result.output[2]]);
+          console.log(result.output);
+          setIsGenerating(false);
+          setIsLoading(false);
+        } else if (result.status === "processing") {
+          console.log("Image generation is processing");
 
-        const imageData = resultImage.output;
-        console.log({ imageData });
-        setGenImg([imageData[0], imageData[1], imageData[2]]);
+          const etaMilliseconds = result.eta * 1000;
+          setTimeout(() => {
+            const queueHeaders = new Headers({
+              "Content-Type": "application/json",
+            });
+
+            const queueBody = JSON.stringify({
+              key: "gkHp5WXV99e8TKY8R4ctMcnYED7p4twNXZ2BX85V8FFh9FmcGOhMiBx4KMIw",
+              request_id: result.id,
+            });
+
+            const queueRequestOptions = {
+              method: "POST",
+              headers: queueHeaders,
+              body: queueBody,
+              redirect: "follow",
+            };
+
+            fetch(
+              "https://modelslab.com/api/v6/images/fetch",
+              queueRequestOptions
+            )
+              .then((queueResponse) => queueResponse.json())
+              .then((queueResult) => {
+                console.log(queueResult);
+                if (queueResult.status === "success") {
+                  console.log("Fetched image successfully");
+                  setGenImg([
+                    queueResult.output[0],
+                    queueResult.output[1],
+                    queueResult.output[2],
+                  ]);
+                  console.log(queueResult.output);
+                }
+
+                setIsGenerating(false);
+                setIsLoading(false);
+              })
+              .catch((error) => {
+                console.log("error", error);
+                setIsGenerating(false);
+                setIsLoading(false);
+              });
+          }, etaMilliseconds);
+        }
+      })
+      .catch((error) => {
+        console.log("error", error);
         setIsGenerating(false);
         setIsLoading(false);
-      })
-      .catch((error) => console.log("error", error));
+      });
   };
 
   const token = process.env.NEXT_PUBLIC_PINATA_JWT;
@@ -148,19 +191,19 @@ const GenerateImage = () => {
     const url = `https://api.pinata.cloud/pinning/pinJSONToIPFS`;
     try {
       const res = await fetch(url, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(JSONBody)
+        body: JSON.stringify(JSONBody),
       });
-      
+
       const data: any = res.json();
-    
+
       return {
         success: true,
-        pinataURL: `https://gateway.pinata.cloud/ipfs/${data.IpfsHash}`
+        pinataURL: `https://gateway.pinata.cloud/ipfs/${data.IpfsHash}`,
       };
     } catch (error: any) {
       console.error(error.message);
@@ -170,9 +213,9 @@ const GenerateImage = () => {
       };
     }
   };
-  
+
   const uploadMetadata = async (nftName: string, nftAssetURL: string) => {
-    console.log(nftName, nftAssetURL)
+    console.log(nftName, nftAssetURL);
     return new Promise(async (resolve, reject) => {
       if (!nftName || !nftAssetURL) {
         reject(new Error("Missing nftColName or nftFileURL"));
@@ -181,35 +224,37 @@ const GenerateImage = () => {
 
       const nftJSON = {
         name: nftName,
-        image: nftAssetURL, 
+        image: nftAssetURL,
         description: "Your NFT description here", // Add a description field if you want
         attributes: [], // Add any custom attributes you want here
       };
 
-      console.log("Json", nftJSON)
+      console.log("Json", nftJSON);
       try {
         const res = await uploadJSONToIPFS(nftJSON); // Since uploadJSONToIPFS looks like an async function
         if (res.success === true) {
           resolve(res);
         } else {
-          throw new Error('Uploading to Pinata failed');
+          throw new Error("Uploading to Pinata failed");
         }
       } catch (err) {
         reject(err);
       }
     });
-  }
-
+  };
 
   const mintNow = async () => {
     if (nftName === "" || genImg[selectedImage] === "") {
       alert("Select image and insert nft name");
       return;
     } else {
-      const uploadRes: any = await uploadMetadata(nftName, genImg[selectedImage]);
-      console.log(uploadRes)
+      const uploadRes: any = await uploadMetadata(
+        nftName,
+        genImg[selectedImage]
+      );
+      console.log(uploadRes);
       if (uploadRes.success === true) {
-        const metadataURL = uploadRes?.pinataURL
+        const metadataURL = uploadRes?.pinataURL;
 
         try {
           const tx2 = await mintNFTAsync({
@@ -218,13 +263,13 @@ const GenerateImage = () => {
             functionName: "create",
             args: [metadataURL],
           });
-          console.log(tx2)
+          console.log(tx2);
         } catch (err) {
-          console.log(err)
+          console.log(err);
         }
       }
     }
-  }
+  };
 
   return (
     <div>
@@ -294,17 +339,17 @@ const GenerateImage = () => {
                   }
                 />
               </Tabs>
-              {
-                <TabImage 
-                  modelSetter={setModel_id} 
-                  inputText={inputText} 
-                  setInputText={setInputText} 
+              {(
+                <TabImage
+                  modelSetter={setModel_id}
+                  inputText={inputText}
+                  setInputText={setInputText}
                   imageSize={imageSize}
                   setImageSize={setImageSize}
-                /> ||
-                activeTab == WorkingTabs.Video && <TabVideo /> ||
-                activeTab == WorkingTabs.Music && <TabMusic />
-              }
+                />
+              ) ||
+                (activeTab == WorkingTabs.Video && <TabVideo />) ||
+                (activeTab == WorkingTabs.Music && <TabMusic />)}
               <div className="flex flex-col gap-3 py-6">
                 <div className="flex justify-center">
                   <PrimaryButton
@@ -351,37 +396,41 @@ const GenerateImage = () => {
                     ) : (
                       <div className="w-full">
                         <div className="grid lg:grid-cols-3 gap-3">
-                          {genImg.length === 3 && genImg.map((item, id) => {
-                            return (
-                              <ImageCard
-                                id={id}
-                                selectedImage={selectedImage}
-                                setSelectedImage={setSelectedImage}
-                                imgSrc={item}
-                              />
-                            );
-                          })}
+                          {genImg.length === 3 &&
+                            genImg.map((item, id) => {
+                              return (
+                                <ImageCard
+                                  id={id}
+                                  selectedImage={selectedImage}
+                                  setSelectedImage={setSelectedImage}
+                                  imgSrc={item}
+                                />
+                              );
+                            })}
                         </div>
                         <Spacer y={6} />
-                          {!isCreating ? (
-                            <div></div>
-                          ) : (
-                            <Input
-                              aria-label="Search"
-                              classNames={{
-                                inputWrapper: "w-full h-full bg-white/10 py-2",
-                                input: "text-lg"
-                              }}
-                              value={nftName}
-                              onChange={(e) => setNftName(e.target.value)}
-                              labelPlacement="outside"
-                              placeholder="Input your NFT name"
-                              radius="sm"
-                              endContent={
-                                <PrimaryButton onClick={mintNow} text="Mint Now" />
-                              }
-                            />
-                          )}
+                        {!isCreating ? (
+                          <div></div>
+                        ) : (
+                          <Input
+                            aria-label="Search"
+                            classNames={{
+                              inputWrapper: "w-full h-full bg-white/10 py-2",
+                              input: "text-lg",
+                            }}
+                            value={nftName}
+                            onChange={(e) => setNftName(e.target.value)}
+                            labelPlacement="outside"
+                            placeholder="Input your NFT name"
+                            radius="sm"
+                            endContent={
+                              <PrimaryButton
+                                onClick={mintNow}
+                                text="Mint Now"
+                              />
+                            }
+                          />
+                        )}
                       </div>
                     )}
                   </div>
@@ -394,5 +443,4 @@ const GenerateImage = () => {
     </div>
   );
 };
-
 export default CreateNFT;
