@@ -48,7 +48,9 @@
 		"eslint-plugin-react-hooks": "^4.6.0",
 		"eslint-plugin-unused-imports": "^3.2.0",
 		"ethers": "^6.12.2",
+		"fetch-retry": "^6.0.0",
 		"framer-motion": "^11.1.1",
+		"http-status-codes": "^2.3.0",
 		"intl-messageformat": "^10.5.0",
 		"moralis": "^2.26.3",
 		"next": "14.2.3",
@@ -63,6 +65,7 @@
 		"tailwind-variants": "^0.1.20",
 		"tailwindcss": "3.4.3",
 		"typescript": "5.0.4",
+		"url-join": "^5.0.0",
 		"viem": "^2.13.3",
 		"wagmi": "^2.9.8",
 		"yarn": "^1.22.22"
