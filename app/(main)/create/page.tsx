@@ -120,36 +120,44 @@ const CreateNFT = () => {
         if (resultImage.status === "error") {
           // showToast("error", resultImage.message);
           return;
+        } else if (resultImage.status === "processing") {
+          const imageData = resultImage.future_links;
+          console.log({ imageData });
+          setGenImg([imageData[0], imageData[1], imageData[2]]);
+          setIsGenerating(false);
+          setIsLoading(false);
+        } else {
+          const imageData = resultImage.output;
+          console.log({ imageData });
+          setGenImg([imageData[0], imageData[1], imageData[2]]);
         }
 
-        const imageData = resultImage.output;
-        console.log({ imageData });
-        setGenImg([imageData[0], imageData[1], imageData[2]]);
         setIsGenerating(false);
         setIsLoading(false);
       })
       .catch((error) => console.log("error", error));
   };
 
-  const token = process.env.NEXT_PUBLIC_PINATA_JWT;
-
   const uploadJSONToIPFS = async (JSONBody: any) => {
     const url = `https://api.pinata.cloud/pinning/pinJSONToIPFS`;
+    console.log("position1");
+  
     try {
       const res = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          pinata_api_key: '9c60aa9933cecb206c3d', // Sensitive information like API keys shouldn't be hard-coded
+          pinata_secret_api_key: 'cc732f6b3107d2687d85527c9a8fbb21020a4a77de2485fb82667d97e934bf37'
         },
-        body: JSON.stringify(JSONBody)
+        body: JSON.stringify(JSONBody),
       });
-      
-      const data: any = res.json();
-    
+  
+      const data = await res.json();
+  
       return {
         success: true,
-        pinataURL: `https://gateway.pinata.cloud/ipfs/${data.IpfsHash}`
+        pinataURL: `https://gateway.pinata.cloud/ipfs/${data.IpfsHash}`,
       };
     } catch (error: any) {
       console.error(error.message);
@@ -161,45 +169,42 @@ const CreateNFT = () => {
   };
   
   const uploadMetadata = async (nftName: string, nftAssetURL: string) => {
-    console.log(nftName, nftAssetURL)
-    return new Promise(async (resolve, reject) => {
-      if (!nftName || !nftAssetURL) {
-        reject(new Error("Missing nftColName or nftFileURL"));
-        return;
-      }
-
-      const nftJSON = {
-        name: nftName,
-        image: nftAssetURL, 
-        description: "Your NFT description here", // Add a description field if you want
-        attributes: [], // Add any custom attributes you want here
-      };
-
-      console.log("Json", nftJSON)
-      try {
-        const res = await uploadJSONToIPFS(nftJSON); // Since uploadJSONToIPFS looks like an async function
-        if (res.success === true) {
-          resolve(res);
-        } else {
-          throw new Error('Uploading to Pinata failed');
-        }
-      } catch (err) {
-        reject(err);
-      }
-    });
-  }
-
+    console.log(nftName, nftAssetURL);
+  
+    if (!nftName || !nftAssetURL) {
+      throw new Error("Missing nftColName or nftFileURL");
+    }
+  
+    const nftJSON = {
+      name: nftName,
+      image: nftAssetURL,
+      description: "Your NFT description here",
+      attributes: [],
+    };
+  
+    console.log("Json", nftJSON);
+  
+    const res = await uploadJSONToIPFS(nftJSON);
+    
+    if (res.success !== true) {
+      throw new Error('Uploading to Pinata failed');
+    }
+    
+    return res;
+  };
 
   const mintNow = async () => {
     if (nftName === "" || genImg[selectedImage] === "") {
       alert("Select image and insert nft name");
       return;
-    } else {
+    }
+
+    try {
       const uploadRes: any = await uploadMetadata(nftName, genImg[selectedImage]);
       console.log(uploadRes)
       if (uploadRes.success === true) {
         const metadataURL = uploadRes?.pinataURL
-
+        
         try {
           const tx2 = await mintNFTAsync({
             address: MARKET_ADDRESS,
@@ -212,6 +217,8 @@ const CreateNFT = () => {
           console.log(err)
         }
       }
+    } catch (err) {
+      console.error(err)
     }
   }
 

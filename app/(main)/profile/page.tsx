@@ -1,11 +1,11 @@
 "use client";
-
 import Image from "next/image";
 import { Tabs, Tab } from "@nextui-org/react";
 import { Icon } from "@iconify/react";
 import { useAccount } from "wagmi";
 
 import { CopyLink } from "@/lib/components/profile/profile-kit/ProfileHeader";
+import TabNFT from "./tabs/TabNFT";
 
 const ProfilePage = () => {
   const { address } = useAccount();
@@ -14,7 +14,7 @@ const ProfilePage = () => {
     <div className="main-pt">
       <div className="container">
         <div className="flex flex-col items-center gap-6 pt-16">
-          <Image src="/profile.png" width={200} height={200}  alt="Avatar" />
+          <Image src="/profile.png" width={200} height={200} alt="Avatar" />
           <CopyLink url={address as string} className="text-lg" />
           <div className="flex gap-3 text-xl font-bold">
             <span>0 followers</span>
@@ -23,11 +23,11 @@ const ProfilePage = () => {
           </div>
         </div>
         <div className="flex justify-center">
-          <div>
+          <div className="w-full flex flex-col items-center">
             <Tabs
               classNames={{
                 tabList: "mx-4 mt-6 text-medium bg-white/5 py-2",
-                tabContent: "text-large"
+                tabContent: "text-large",
               }}
               size="lg"
             >
@@ -52,8 +52,9 @@ const ProfilePage = () => {
                     <p>NFTs</p>
                   </div>
                 }
+                className="w-full"
               >
-                <h2>NFTs</h2>
+                <TabNFT />
               </Tab>
               <Tab
                 key="list"
@@ -80,13 +81,11 @@ const ProfilePage = () => {
                 <h2>Liked</h2>
               </Tab>
             </Tabs>
-
           </div>
         </div>
       </div>
-
     </div>
   );
-}
+};
 
 export default ProfilePage;
