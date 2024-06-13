@@ -143,7 +143,7 @@ const CreateNFT = () => {
               request_id: result.id,
             });
 
-            const queueRequestOptions = {
+            const queueRequestOptions: RequestInit = {
               method: "POST",
               headers: queueHeaders,
               body: queueBody,
