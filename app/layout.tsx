@@ -1,7 +1,9 @@
 import "@/styles/globals.css";
+import "react-toastify/dist/ReactToastify.css";
 import { Metadata, Viewport } from "next";
 import clsx from "clsx";
 import { getServerSession } from "next-auth";
+import { ToastContainer } from "react-toastify";
 
 import { Providers } from "./providers";
 import Web3ModalProvider from "@/lib/web3/WagmiProvider";
@@ -37,7 +39,10 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const initialState = cookieToInitialState(wagmiConfig, headers().get("cookie"));
+  const initialState = cookieToInitialState(
+    wagmiConfig,
+    headers().get("cookie")
+  );
   const session = await getServerSession(authConfig);
 
   return (
@@ -46,13 +51,14 @@ export default async function RootLayout({
       <body
         className={clsx(
           "min-h-screen bg-dark-blue font-sans antialiased",
-          fontSans.variable,
+          fontSans.variable
         )}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
           <Web3ModalProvider initialState={initialState}>
             <AuthSessionProvider session={session}>
               {children}
+              <ToastContainer />
             </AuthSessionProvider>
           </Web3ModalProvider>
         </Providers>

@@ -1,6 +1,6 @@
 "use client";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay,Navigation, Pagination  } from "swiper/modules";
+import { Autoplay, Navigation, Pagination } from "swiper/modules";
 
 import "swiper/css";
 import "swiper/css/pagination";
@@ -26,17 +26,20 @@ export default function ImageCarousel() {
           disableOnInteraction: false,
         }}
         pagination={pagination}
-        navigation={true}
         modules={[Autoplay, Pagination, Navigation]}
         className="mySwiper"
       >
-        {
-          [1, 2, 3, 4, 5, 6, 7].map((item) => {
-            return (
-              <SwiperSlide key={item}><img className="w-full" src={`/carousel/carousel${item}.png`} alt="Not Found" /></SwiperSlide>
-            );
-          })
-        }
+        {[1, 2, 3, 4, 5, 6, 7].map((item) => {
+          return (
+            <SwiperSlide key={item}>
+              <img
+                className="w-full"
+                src={`/carousel/carousel${item}.png`}
+                alt="Not Found"
+              />
+            </SwiperSlide>
+          );
+        })}
       </Swiper>
     </>
   );
