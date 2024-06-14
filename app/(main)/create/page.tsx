@@ -48,8 +48,8 @@ const CreateNFT = () => {
   const [model_id, setModel_id] = useState("");
   const [imageSize, setImageSize] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-
   const [nftName, setNftName] = useState("");
+  const [initImage, setInitImage] = useState(false);
 
   const imageSizeArr = [
     { width: 512, height: 512 },
@@ -85,13 +85,14 @@ const CreateNFT = () => {
       key: "gkHp5WXV99e8TKY8R4ctMcnYED7p4twNXZ2BX85V8FFh9FmcGOhMiBx4KMIw",
       prompt: inputText,
       model_id: model_id,
+      init_image: "",
       negative_prompt: "bad quality",
       width: imageSizeArr[imageSize - 1].width,
       height: imageSizeArr[imageSize - 1].height,
       safety_checker: false,
       seed: null,
       num_inference_steps: "21",
-      enhance_prompt: true,
+      enhance_prompt: false,
       guidance_scale: 7.5,
       multi_lingual: false,
       panorama: false,

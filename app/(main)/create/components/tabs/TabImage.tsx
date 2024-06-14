@@ -11,8 +11,15 @@ import {
 
 import ImageUploader from "../ImageUploader";
 import RatioCard from "../RatioCard";
-export default function TabImage({ modelSetter, inputText, setInputText, imageSize, setImageSize }: any) {
-
+export default function TabImage({
+  modelSetter,
+  inputText,
+  setInputText,
+  imageSize,
+  setImageSize,
+  initImage,
+  setInitImage,
+}: any) {
   const models = [
     { key: "Stable Diffusion", label: "Stable Diffusion" },
     { key: "Midjourney", label: "Midjourney" },
@@ -30,7 +37,9 @@ export default function TabImage({ modelSetter, inputText, setInputText, imageSi
     { name: "Film", model_id: "realistic-vision-v40" },
   ];
 
-  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(
+    null
+  );
 
   const handleCardClick = (model_id: string) => {
     console.log(model_id);
@@ -44,12 +53,35 @@ export default function TabImage({ modelSetter, inputText, setInputText, imageSi
           <p className="mb-1">Choose a model</p>
           <Select
             variant="bordered"
+            disabledKeys={["Midjourney", "DALL-E"]}
+            placeholder="Choose a model"
             aria-label="select"
-            placeholder="Select a model"
             labelPlacement="outside"
             classNames={{
-              base: "max-w-xs",
+              base: "max-w",
               trigger: "h-12",
+            }}
+            listboxProps={{
+              hideSelectedIcon: true,
+              itemClasses: {
+                base: [
+                  "text-default-700",
+                  "transition-opacity",
+                  "data-[hover=true]:text-foreground",
+                  "dark:data-[hover=true]:bg-[#15BFFD]",
+                  "data-[pressed=true]:opacity-70",
+                  "data-[hover=true]:bg-[#15BFFD]",
+                  "data-[selectable=true]:focus:bg-[#15BFFD]",
+                  "data-[focus-visible=true]:ring-default-500",
+                ],
+              },
+            }}
+            popoverProps={{
+              offset: 10,
+              classNames: {
+                base: "rounded-large",
+                content: "p-1 border-small border-default-100 bg-[#232740]",
+              },
             }}
           >
             {models.map((model) => (
@@ -113,9 +145,9 @@ export default function TabImage({ modelSetter, inputText, setInputText, imageSi
           <p className="mb-1">Aspect Ratios</p>
           <div className="grid grid-cols-6 gap-3">
             {[1, 2, 3, 4, 5].map((size, index) => (
-              <RatioCard 
+              <RatioCard
                 key={index}
-                size={size} 
+                size={size}
                 imageSize={imageSize}
                 setImageSize={setImageSize}
               />
