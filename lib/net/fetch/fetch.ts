@@ -18,7 +18,7 @@ export const fetchServer = async (
   method = "GET"
 ) => {
   if (!path.startsWith("http")) {
-    urlJoin(process.env.NEXT_PUBLIC_API_BASE_URL!, path);
+    path = urlJoin(process.env.NEXT_PUBLIC_API_BASE_URL!, path);
   }
 
   const headers: HeadersInit = {
@@ -56,13 +56,17 @@ export const putServer = (
   body?: Record<string, unknown>,
   params?: Record<string, unknown>,
   method = "PUT"
-) => fetchServer(path, { body: JSON.stringify(body), ...params }, method);
+) => {
+  return fetchServer(path, { body: JSON.stringify(body), ...params }, method);
+};
 
 export const postServer = (
   path: string,
   body?: Record<string, unknown>,
   params?: Record<string, unknown>
-) => putServer(path, body, params, "POST");
+) => {
+  return putServer(path, body, params, "POST");
+};
 
 export const patchServer = (
   path: string,

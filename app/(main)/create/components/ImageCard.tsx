@@ -1,9 +1,38 @@
-import React from "react";
-import { Card, Image } from "@nextui-org/react";
+"use client";
+import React, { useEffect } from "react";
+import { useAccount } from "wagmi";
+import { Button, Card, Image } from "@nextui-org/react";
 import { twMerge } from "tailwind-merge";
 
-export default function ImageCard(props: any) {
-  const { selectedImage, setSelectedImage, id, imgSrc } = props;
+import useSaveImage from "@/lib/hooks/image/useSaveImage";
+import useToast from "@/lib/hooks/toast/useToast";
+
+import "./style.scss";
+import PrimaryButton from "@/lib/components/button/PrimaryButton";
+
+type CardProps = {
+  id: number;
+  selectedImage: number;
+  setSelectedImage: (type: number) => void;
+  imgSrc: string;
+};
+
+export default function ImageCard(props: CardProps) {
+  const { id, imgSrc, selectedImage, setSelectedImage } = props;
+  const { address } = useAccount();
+
+  const { isSaving, isSaved, setIsSaved, saveImage } = useSaveImage();
+  const customToast = useToast();
+
+  useEffect(() => {
+    if (isSaved === "success") {
+      customToast("success", "Successfully saved to your arkwork");
+      setIsSaved("");
+    } else if (isSaved === "failed") {
+      customToast("failed", "Already exist in your artwork");
+      setIsSaved("");
+    }
+  }, [isSaved]);
 
   function handleClick() {
     setSelectedImage(id);
@@ -12,17 +41,23 @@ export default function ImageCard(props: any) {
   return (
     <Card
       className={twMerge(
-        "border-blue-400 min-h-[250px]",
-        selectedImage === id && " border-2 ring-4"
+        "card-container border-blue-400 min-h-[250px] relative",
+        selectedImage === id && "border-2 ring-4"
       )}
     >
       <Image
         alt="Failed"
         className="object-cover hover:cursor-pointer min-w-[250px] min-h-[250px]"
         src={imgSrc}
-        isLoading
-        onClick={handleClick}
+        isZoomed
       />
+      <div className="overlay" onClick={handleClick}>
+        <PrimaryButton
+          text="Save To Artwork"
+          onClick={() => saveImage(address as string, imgSrc)}
+        />
+        <PrimaryButton text="Mint Your NFT" />
+      </div>
     </Card>
   );
 }
