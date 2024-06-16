@@ -10,7 +10,7 @@ const useSaveImage = () => {
     try {
       setIsSaving(true);
 
-      const response = await postServer("/image/save", {
+      const response = await postServer("/artwork/save", {
         address,
         url,
       });

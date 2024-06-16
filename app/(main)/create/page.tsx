@@ -17,15 +17,14 @@ import TabImage from "./components/tabs/TabImage";
 import TabVideo from "./components/tabs/TabVideo";
 import TabMusic from "./components/tabs/TabMusic";
 import ImageCard from "./components/ImageCard";
+import { GalleryIcon } from "./components/icons/GalleryIcon";
+import { VideoIcon } from "./components/icons/VideoIcon";
+import { MusicIcon } from "./components/icons/MusicIcon";
 import PrimaryButton from "@/lib/components/button/PrimaryButton";
 
 import { postServer } from "@/lib/net/fetch/fetch";
 import useToast from "@/lib/hooks/toast/useToast";
-
-import NFTABI from "@/lib/web3/contracts/NYWNFT.json";
-import { GalleryIcon } from "./components/icons/GalleryIcon";
-import { VideoIcon } from "./components/icons/VideoIcon";
-import { MusicIcon } from "./components/icons/MusicIcon";
+import useNFTMint from "@/lib/web3/hook/nft/useNFTMint";
 
 enum WorkingTabs {
   Image = "image",
@@ -33,15 +32,13 @@ enum WorkingTabs {
   Music = "music",
 }
 
-const MARKET_ADDRESS = process.env.NEXT_PUBLIC_MARKET_ADDRESS as `0x${string}`;
-
 const CreateNFT = () => {
   const router = useRouter();
   const { data } = useSession();
   const { isConnected, address } = useAccount();
 
-  const { writeContractAsync: mintNFTAsync } = useWriteContract();
   const customToast = useToast();
+  const { isMintLoading, isMintSuccess, mintNFT } = useNFTMint();
 
   const [activeTab, setActiveTab] = useState<WorkingTabs>(WorkingTabs.Image);
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
@@ -63,7 +60,6 @@ const CreateNFT = () => {
   ];
 
   useEffect(() => {
-    console.log(data, address, isConnected);
     if (data?.provider !== "siwe" || (isConnected === false && !address)) {
       signOut({
         redirect: false,
@@ -79,10 +75,16 @@ const CreateNFT = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (isMintSuccess) {
+      customToast("success", "Successfully minted your NFT");
+    }
+  }, [isMintSuccess]);
+
   const GenerateImage = async () => {
     setIsGenerating(true);
     try {
-      const response = await postServer("/image/generate", {
+      const response = await postServer("/artwork/generate", {
         prompt: inputText,
         model_id: model_id,
         width: imageSizeArr[imageSize - 1].width,
@@ -95,68 +97,6 @@ const CreateNFT = () => {
       setIsGenerating(false);
       console.log(err);
     }
-  };
-
-  const saveImageToArtwork = async (url: string) => {
-    const response = await postServer("/image/save", {
-      url,
-    });
-  };
-
-  const uploadJSONToIPFS = async (JSONBody: any) => {
-    const url = `https://api.pinata.cloud/pinning/pinJSONToIPFS`;
-    console.log("position1");
-
-    try {
-      const res = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          pinata_api_key: "9c60aa9933cecb206c3d", // Sensitive information like API keys shouldn't be hard-coded
-          pinata_secret_api_key:
-            "cc732f6b3107d2687d85527c9a8fbb21020a4a77de2485fb82667d97e934bf37",
-        },
-        body: JSON.stringify(JSONBody),
-      });
-
-      const data = await res.json();
-
-      return {
-        success: true,
-        pinataURL: `https://gateway.pinata.cloud/ipfs/${data.IpfsHash}`,
-      };
-    } catch (error: any) {
-      console.error(error.message);
-      return {
-        success: false,
-        message: error.message,
-      };
-    }
-  };
-
-  const uploadMetadata = async (nftName: string, nftAssetURL: string) => {
-    console.log(nftName, nftAssetURL);
-
-    if (!nftName || !nftAssetURL) {
-      throw new Error("Missing nftColName or nftFileURL");
-    }
-
-    const nftJSON = {
-      name: nftName,
-      image: nftAssetURL,
-      description: "Your NFT description here",
-      attributes: [],
-    };
-
-    console.log("Json", nftJSON);
-
-    const res = await uploadJSONToIPFS(nftJSON);
-
-    if (res.success !== true) {
-      throw new Error("Uploading to Pinata failed");
-    }
-
-    return res;
   };
 
   const mintNow = async () => {
@@ -173,16 +113,19 @@ const CreateNFT = () => {
       });
 
       if (res.success === true) {
-        const metadataURL = res?.metadataURL;
+        const { owner, metadataURL, assetURL } = res;
+
         console.log(metadataURL);
         try {
-          const tx2 = await mintNFTAsync({
-            address: MARKET_ADDRESS,
-            abi: NFTABI,
-            functionName: "create",
-            args: [metadataURL],
-          });
-          console.log(tx2);
+          const tx = await mintNFT(metadataURL);
+          if (tx) {
+            const response = await postServer("/nft/save", {
+              tx,
+              owner,
+              assetURL,
+              metadataURL,
+            });
+          }
         } catch (err) {
           console.log(err);
         }
@@ -341,7 +284,11 @@ const CreateNFT = () => {
                       placeholder="Input your NFT name"
                       radius="sm"
                       endContent={
-                        <PrimaryButton onClick={mintNow} text="Mint Now" />
+                        <PrimaryButton
+                          onClick={mintNow}
+                          text="Mint Now"
+                          isLoading={isMintLoading}
+                        />
                       }
                     />
                   </div>
