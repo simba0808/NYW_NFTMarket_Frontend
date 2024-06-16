@@ -1,8 +1,10 @@
 import "@/styles/globals.css";
 import "react-toastify/dist/ReactToastify.css";
 import { Metadata, Viewport } from "next";
-import clsx from "clsx";
+import { headers } from "next/headers";
 import { getServerSession } from "next-auth";
+import clsx from "clsx";
+import { cookieToInitialState } from "wagmi";
 import { ToastContainer } from "react-toastify";
 
 import { Providers } from "./providers";
@@ -13,8 +15,6 @@ import authConfig from "@/lib/auth/authConfig";
 
 import { siteConfig } from "@/lib/config/site";
 import { fontSans } from "@/lib/config/fonts";
-import { cookieToInitialState } from "wagmi";
-import { headers } from "next/headers";
 
 export const metadata: Metadata = {
   title: {

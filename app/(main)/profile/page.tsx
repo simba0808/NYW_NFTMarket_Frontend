@@ -6,6 +6,7 @@ import { useAccount } from "wagmi";
 
 import { CopyLink } from "@/lib/components/profile/profile-kit/ProfileHeader";
 import TabNFT from "./tabs/TabNFT";
+import TabArtwork from "./tabs/TabArtwork";
 
 const ProfilePage = () => {
   const { address } = useAccount();
@@ -41,7 +42,7 @@ const ProfilePage = () => {
                   </div>
                 }
               >
-                <h2>Artwork</h2>
+                <TabArtwork />
               </Tab>
               <Tab
                 key="nft"

@@ -6,6 +6,28 @@ import { Image } from "@nextui-org/react";
 import Box from "@mui/material/Box";
 import ImageList from "@mui/material/ImageList";
 
+type NFT = {
+  amount: string;
+  block_number: string;
+  block_number_minted: string;
+  collection_banner_image?: string | null;
+  collection_logo?: string | null;
+  contract_type: string;
+  last_metadata_sync: string;
+  last_token_uri_sync: string;
+  metadata: JSON;
+  minter_address: string;
+  name: string;
+  owner_of: string;
+  possible_spam: boolean;
+  symbol: string;
+  token_address: string;
+  token_hash: string;
+  token_id: string;
+  token_uri: string;
+  verified_collection: boolean;
+};
+
 const TabNFT = () => {
   const { address, isConnected } = useAccount();
   const [myNFTs, setMyNFTs] = useState<any>([]);
@@ -21,12 +43,13 @@ const TabNFT = () => {
         console.log(error);
       }
     };
-
-    initializeMoralis();
+    if (!Moralis.Core.isStarted) {
+      initializeMoralis();
+    }
   }, []);
 
   useEffect(() => {
-    async function fetchNFTs(address) {
+    async function fetchNFTs(address: `0x${string}`) {
       try {
         const response = await Moralis.EvmApi.nft.getWalletNFTs({
           chain: "0xAA36A7",
@@ -53,7 +76,7 @@ const TabNFT = () => {
           {myNFTs.map((nft, index) => {
             return (
               <Image
-                key={nft}
+                key={nft?.token_id}
                 src={JSON.parse(nft.metadata).image}
                 isZoomed
                 alt={`NFT ${index}`}
