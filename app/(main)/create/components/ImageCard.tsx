@@ -15,10 +15,11 @@ type CardProps = {
   selectedImage: number;
   setSelectedImage: (type: number) => void;
   imgSrc: string;
+  prompt: string;
 };
 
 export default function ImageCard(props: CardProps) {
-  const { id, imgSrc, selectedImage, setSelectedImage } = props;
+  const { id, imgSrc, selectedImage, setSelectedImage, prompt } = props;
   const { address } = useAccount();
 
   const { isSaving, isSaved, setIsSaved, saveImage } = useSaveImage();
@@ -54,7 +55,7 @@ export default function ImageCard(props: CardProps) {
       <div className="overlay" onClick={handleClick}>
         <PrimaryButton
           text="Save To Artwork"
-          onClick={() => saveImage(address as string, imgSrc)}
+          onClick={() => saveImage(address as string, imgSrc, prompt)}
         />
         <PrimaryButton text="Mint Your NFT" />
       </div>

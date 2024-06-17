@@ -259,5 +259,29 @@
     .prompt-container p {
       font-size: 12px;
     }
+
+    @keyframes fadeIn {
+      0%, 100% {
+          opacity: 0;
+      }
+      50% {
+          opacity: 1;
+      }
+    }
+    
+    .imageContainer {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+    
+    .loader {
+        background-color: #000;
+        animation: fadeIn 2s infinite;
+    }
+    
+    .imageLoaded {
+        opacity: 1;
+    }
   }
 }

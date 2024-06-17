@@ -118,14 +118,14 @@ const CreateNFT = () => {
         console.log(metadataURL);
         try {
           const tx = await mintNFT(metadataURL);
-          if (tx) {
-            const response = await postServer("/nft/save", {
-              tx,
-              owner,
-              assetURL,
-              metadataURL,
-            });
-          }
+          setTimeout(async () => {
+            if (tx) {
+              const response = await postServer("/nft/save", {
+                tx,
+                assetURL,
+              });
+            }
+          }, 30000);
         } catch (err) {
           console.log(err);
         }
@@ -267,6 +267,7 @@ const CreateNFT = () => {
                               selectedImage={selectedImage}
                               setSelectedImage={setSelectedImage}
                               imgSrc={item}
+                              prompt={inputText}
                             />
                           );
                         })}

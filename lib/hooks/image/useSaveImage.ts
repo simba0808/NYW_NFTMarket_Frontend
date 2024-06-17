@@ -6,13 +6,14 @@ const useSaveImage = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [isSaved, setIsSaved] = useState<"success" | "failed" | "">("");
 
-  const saveImage = async (address: string, url: string) => {
+  const saveImage = async (address: string, url: string, prompt: string) => {
     try {
       setIsSaving(true);
 
       const response = await postServer("/artwork/save", {
         address,
         url,
+        prompt,
       });
 
       setIsSaving(false);
