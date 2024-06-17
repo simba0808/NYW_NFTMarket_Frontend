@@ -74,7 +74,7 @@ export default function ArtworkDetailView({
               const response = await postServer("/nft/save", {
                 tx,
                 assetURL,
-                prompt,
+                prompt: detailedArtworkData?.image_prompt,
               });
             }
           }, 30000);

@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useAccount, useWriteContract } from "wagmi";
+import { useAccount } from "wagmi";
 import {
   Breadcrumbs,
   BreadcrumbItem,
@@ -110,10 +110,11 @@ const CreateNFT = () => {
         address: address as string,
         name: nftName,
         url: genImg[selectedImage],
+        prompt: inputText,
       });
 
       if (res.success === true) {
-        const { owner, metadataURL, assetURL } = res;
+        const { metadataURL, assetURL } = res;
 
         console.log(metadataURL);
         try {
@@ -123,6 +124,7 @@ const CreateNFT = () => {
               const response = await postServer("/nft/save", {
                 tx,
                 assetURL,
+                prompt: inputText,
               });
             }
           }, 30000);
@@ -132,6 +134,7 @@ const CreateNFT = () => {
       }
     } catch (err) {
       console.error(err);
+      customToast("failed", "Failed to mint NFT");
     }
   };
 
@@ -263,6 +266,7 @@ const CreateNFT = () => {
                         genImg.map((item, id) => {
                           return (
                             <ImageCard
+                              key={id}
                               id={id}
                               selectedImage={selectedImage}
                               setSelectedImage={setSelectedImage}

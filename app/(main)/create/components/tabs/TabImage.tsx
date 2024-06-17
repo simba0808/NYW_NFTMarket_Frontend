@@ -1,16 +1,28 @@
 "use client";
 import { useState } from "react";
-import { Select, SelectItem, Textarea, Card, CardFooter, Image } from "@nextui-org/react";
+import {
+  Select,
+  SelectItem,
+  Textarea,
+  Card,
+  CardFooter,
+  Image,
+} from "@nextui-org/react";
 
 import ImageUploader from "../ImageUploader";
 import RatioCard from "../RatioCard";
 
-export default function TabImage({ modelSetter, inputText, setInputText, imageSize, setImageSize }: any) {
-
+export default function TabImage({
+  modelSetter,
+  inputText,
+  setInputText,
+  imageSize,
+  setImageSize,
+}: any) {
   const models = [
     { key: "Stable Diffusion", label: "Stable Diffusion" },
     { key: "Midjourney", label: "Midjourney" },
-    { key: "DALL-E", label: "DALL-E" }
+    { key: "DALL-E", label: "DALL-E" },
   ];
   const styles = [
     { name: "Pixel", model_id: "pixel-art-v3" },
@@ -24,8 +36,9 @@ export default function TabImage({ modelSetter, inputText, setInputText, imageSi
     { name: "Film", model_id: "realistic-vision-v40" },
   ];
 
-
-  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(
+    null
+  );
 
   const handleCardClick = (model_id: string) => {
     console.log(model_id);
@@ -45,11 +58,10 @@ export default function TabImage({ modelSetter, inputText, setInputText, imageSi
             classNames={{
               base: "max-w-xs",
               trigger: "h-12",
-            }}>
+            }}
+          >
             {models.map((model) => (
-              <SelectItem key={model.key}>
-                {model.label}
-              </SelectItem>
+              <SelectItem key={model.key}>{model.label}</SelectItem>
             ))}
           </Select>
         </div>
@@ -85,7 +97,11 @@ export default function TabImage({ modelSetter, inputText, setInputText, imageSi
               >
                 <Image
                   alt="Not Found"
-                  className={`object-cover ${selectedImageIndex === index ? "border-[#15BFFD] border-2" : ""}`}
+                  className={`object-cover ${
+                    selectedImageIndex === index
+                      ? "border-[#15BFFD] border-2"
+                      : ""
+                  }`}
                   onClick={() => {
                     setSelectedImageIndex(index);
                     handleCardClick(style.model_id);
@@ -105,9 +121,9 @@ export default function TabImage({ modelSetter, inputText, setInputText, imageSi
           <p className="mb-1">Aspect Ratios</p>
           <div className="grid grid-cols-6 gap-3">
             {[1, 2, 3, 4, 5].map((size, index) => (
-              <RatioCard 
+              <RatioCard
                 key={index}
-                size={size} 
+                size={size}
                 imageSize={imageSize}
                 setImageSize={setImageSize}
               />
@@ -127,4 +143,3 @@ export default function TabImage({ modelSetter, inputText, setInputText, imageSi
     </div>
   );
 }
-
