@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { useWriteContract, useWaitForTransactionReceipt,   } from "wagmi";
+import { useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { ContractFunctionExecutionError } from "viem";
 
 import NFTABI from "@/lib/web3/contracts/NYWNFT.json";
@@ -11,7 +11,6 @@ const useNFTMint = () => {
 
   const { isLoading, isSuccess } = useWaitForTransactionReceipt({
     hash: mintData,
-    
   });
 
   const mintNFT = useCallback(

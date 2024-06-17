@@ -42,7 +42,7 @@ export default function ImageCard(props: CardProps) {
   return (
     <Card
       className={twMerge(
-        "card-container border-blue-400 min-h-[250px] relative",
+        "card-container border-blue-400 w-full h-full relative",
         selectedImage === id && "border-2 ring-4"
       )}
     >
