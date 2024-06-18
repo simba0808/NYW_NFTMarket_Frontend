@@ -1,6 +1,7 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
 import { useAccount } from "wagmi";
+import { useRouter } from "next/navigation";
 import { Image } from "@nextui-org/react";
 import Box from "@mui/material/Box";
 import ImageList from "@mui/material/ImageList";
@@ -13,9 +14,11 @@ type NFTData = {
   owner: string;
   creator: string;
   asset_url: string;
+  asset_hash: string;
 };
 
 const TabNFT = () => {
+  const router = useRouter();
   const { address, isConnected } = useAccount();
   const [myNFTs, setMyNFTs] = useState<NFTData[]>([]);
 
@@ -41,7 +44,7 @@ const TabNFT = () => {
   return (
     <div className="flex flex-wrap">
       <Box sx={{ width: "100%", overflowY: "none" }}>
-        <ImageList variant="masonry" cols={5}>
+        <ImageList variant="standard" cols={5} gap={10}>
           {myNFTs.map((nft, index) => {
             return (
               <Image
@@ -49,7 +52,8 @@ const TabNFT = () => {
                 src={`${process.env.NEXT_PUBLIC_API_BASE_URL}/${nft.asset_url}`}
                 isZoomed
                 alt={`NFT ${index}`}
-                className="max-w-[300px] rounded-lg hover:cursor-pointer"
+                className="py-1 rounded-lg hover:cursor-pointer"
+                onClick={() => router.push(`/nft/${nft.asset_hash}`)}
               />
             );
           })}

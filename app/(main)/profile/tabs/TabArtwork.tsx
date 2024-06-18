@@ -32,9 +32,9 @@ const TabArtwork = () => {
   }, [address]);
 
   return (
-    <div className="flx flex-wrap">
+    <div className="flex flex-wrap">
       <Box sx={{ width: "100%", overflowY: "none" }}>
-        <ImageList variant="masonry" cols={4} gap={10}>
+        <ImageList variant="standard" cols={4} gap={10}>
           {artworks.map((artwork, index) => {
             return (
               <Image

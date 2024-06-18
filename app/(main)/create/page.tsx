@@ -114,7 +114,7 @@ const CreateNFT = () => {
       });
 
       if (res.success === true) {
-        const { metadataURL, assetURL } = res;
+        const { nft_name, metadataURL, assetURL } = res;
 
         console.log(metadataURL);
         try {
@@ -123,6 +123,7 @@ const CreateNFT = () => {
             if (tx) {
               const response = await postServer("/nft/save", {
                 tx,
+                nft_name,
                 assetURL,
                 prompt: inputText,
               });
