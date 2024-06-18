@@ -154,8 +154,8 @@ const Explorer = () => {
                 return (
                   <CommentCard
                     key={index}
-                    creator={comment.comment_creator}
-                    comment={comment.comment_data}
+                    creator={comment.creator}
+                    comment={comment.contents}
                   />
                 );
               })
@@ -164,16 +164,18 @@ const Explorer = () => {
           </div>
           <div className="flex justify-between items-center py-3">
             <span>Show List {page} of {NFTDetails[nftId-1].comments.length}</span>
-            <Pagination
-              isCompact
-              showControls
-              showShadow
-              variant="light"
-              className="text-dark-blue"
-              page={page}
-              total={pages}
-              onChange={(page: number) => setPage(page)}
-            />
+            <div>
+              <Pagination
+                isCompact
+                showControls
+                showShadow
+                variant="light"
+                className="text-dark-blue"
+                page={page}
+                total={pages}
+                onChange={(page: number) => setPage(page)}
+              />
+            </div>
           </div>
         </div>
         <div className="mt-10 text-center">
