@@ -6,6 +6,7 @@ import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { useAccount, useConfig, useDisconnect, useSignMessage } from "wagmi";
 import { Button } from "@nextui-org/button";
 
+import { authChallenge } from "@/lib/net/modules/auth";
 import WalletIcon from "@/public/icon/wallet.svg";
 
 const SiweButton = () => {
@@ -17,19 +18,21 @@ const SiweButton = () => {
   const modalOpened = useRef(false);
 
   const onSignIn = useCallback(async () => {
-    const callbackUrl = "/explore"
+    const callbackUrl = "/explore";
     if (!address) {
       localStorage.removeItem("wallteconnet");
       localStorage.removeItem("wagmi.wallet");
       localStorage.removeItem("wagmi.store");
       localStorage.removeItem("wagmi.connected");
-      
+
       modalOpened.current = true;
       open();
     } else {
       modalOpened.current = false;
 
       try {
+        const nonce = await authChallenge(address);
+
         const message = new SiweMessage({
           domain: window.location.host,
           address: address,
@@ -47,7 +50,7 @@ const SiweButton = () => {
           message: JSON.stringify(message),
           redirect: true,
           signature,
-          callbackUrl
+          callbackUrl,
         });
       } catch (error) {
         console.log(error);
@@ -59,7 +62,7 @@ const SiweButton = () => {
     if (address && modalOpened.current) {
       onSignIn();
     }
-  }, [address, onSignIn])
+  }, [address, onSignIn]);
 
   return (
     <Button
@@ -70,6 +73,6 @@ const SiweButton = () => {
       Sign Up with Wallet
     </Button>
   );
-}
+};
 
 export default SiweButton;

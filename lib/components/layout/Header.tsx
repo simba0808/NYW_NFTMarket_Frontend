@@ -12,31 +12,40 @@ export default function Header() {
   const { data: session, status } = useSession();
   const { address } = useAccount();
   const path = usePathname();
-  
+
   const onLogo = useCallback(() => {
     router.push("/");
   }, []);
 
   const logoElement = useMemo(() => {
     return (
-      <img src="/logo.png" className="hover:cursor-pointer" onClick={onLogo} alt="Not Found" />
+      <img
+        src="/logo.png"
+        className="hover:cursor-pointer"
+        onClick={onLogo}
+        alt="Not Found"
+      />
     );
   }, []);
 
-  const headerTrailing = useMemo(() => (
-    <div>
-      {
-        session && address ? 
-          <ToggleProfile /> :
-          <PrimaryButton 
-            text={path==="/signin"?"Get Started":"Connect Wallet"}
-            className="w-32 md:w-40" 
-            onClick={() => router.push("/signin")} varient="secondary" 
+  const headerTrailing = useMemo(
+    () => (
+      <div>
+        {session && address ? (
+          <ToggleProfile />
+        ) : (
+          <PrimaryButton
+            text={path === "/signin" ? "Get Started" : "Connect Wallet"}
+            className="w-32 md:w-40"
+            onClick={() => router.push("/signin")}
+            varient="secondary"
           />
-      }
-    </div>
-  ), [session, status]);
-  
+        )}
+      </div>
+    ),
+    [session, status]
+  );
+
   return (
     <div className="header__wrapper overflow-x bg-dark-blue shadow-lg shadow-white/10">
       <div className=" bg-white/5">
@@ -44,22 +53,38 @@ export default function Header() {
           <header className="flex flex-row items-center justify-between">
             {logoElement}
             <ul className="hidden md:flex items-center justify-between gap-[28px]">
-              <li role="button" tabIndex={0} onClick={() => router.push("/explore")}>
+              <li
+                role="button"
+                tabIndex={0}
+                onClick={() => router.push("/explore")}
+              >
                 <span>Explorer NFT</span>
               </li>
-              <li role="button" tabIndex={0} onClick={() => router.push("/create")}>
+              <li
+                role="button"
+                tabIndex={0}
+                onClick={() => router.push("/create")}
+              >
                 <span>Create NFT</span>
               </li>
-              <li role="button" tabIndex={0} onClick={() => router.push("/earn")}>
+              <li
+                role="button"
+                tabIndex={0}
+                onClick={() => router.push("/earn")}
+              >
                 <span>EARN</span>
               </li>
-              <li role="button" tabIndex={0} onClick={() => router.push("/campaign")}>
+              <li
+                role="button"
+                tabIndex={0}
+                onClick={() => router.push("/campaign")}
+              >
                 <span>Campaigns</span>
               </li>
             </ul>
-            { headerTrailing }
+            {headerTrailing}
           </header>
-        </div>  
+        </div>
       </div>
     </div>
   );

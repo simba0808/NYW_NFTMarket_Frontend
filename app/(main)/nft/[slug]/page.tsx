@@ -19,11 +19,11 @@ import LikeIcon from "@/public/icon/like.svg";
 import FollowIcon from "@/public/icon/follow.svg";
 import { shortenAddress } from "@/lib/components/profile/profile-kit/ProfileHeader";
 import { fetchServer } from "@/lib/net/fetch/fetch";
+
 import useToast from "@/lib/hooks/toast/useToast";
 import useComments from "@/lib/hooks/nft/useComments";
+import useLike from "@/lib/hooks/nft/useLike";
 import usePagination from "@/lib/hooks/nft/usePagination";
-
-import type { CommentType } from "@/lib/components/card/NFTViewCard";
 
 type DetailedNFTData = {
   token_name?: string;
@@ -151,6 +151,7 @@ export default function NFTDetailView({
 
   const { address } = useAccount();
   const customToast = useToast();
+  const { likeNFT } = useLike();
 
   const fetchDetailedData = useCallback(async () => {
     try {
@@ -161,7 +162,11 @@ export default function NFTDetailView({
 
   useEffect(() => {
     fetchDetailedData();
-  }, []);
+  }, [params.slug]);
+
+  const handleLike = () => {
+    likeNFT(hash, address as string);
+  };
 
   return (
     <div className="main-pt">
@@ -169,7 +174,7 @@ export default function NFTDetailView({
         <div className="flex flex-col lg:flex-row gap-6 mt-4 lg:mt-10">
           <div className="p-2 lg:bg-white/10 rounded-md">
             {detailedNFTData && (
-              <img
+              <Image
                 className="max-h-[600px]"
                 src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${detailedNFTData.asset_url}`}
                 alt="Not Found"
@@ -192,7 +197,9 @@ export default function NFTDetailView({
                   <span>10</span>
                 </span>
                 <span className="flex gap-1">
-                  <LikeIcon />
+                  <Button isIconOnly onClick={handleLike}>
+                    <LikeIcon />
+                  </Button>
                   <span>{detailedNFTData?.likes}</span>
                 </span>
                 <span>
