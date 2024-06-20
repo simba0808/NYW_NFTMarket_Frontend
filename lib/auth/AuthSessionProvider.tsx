@@ -9,17 +9,14 @@ import type { FC } from "react";
 type Props = {
   session: Session | null;
   children: React.ReactNode;
-}
+};
 
-const AuthSessionProvider: FC<Props> = ({
-  session,
-  children
-}) => {
+const AuthSessionProvider: FC<Props> = ({ session, children }) => {
   return (
-    <SessionProvider session={ session }>
+    <SessionProvider session={session} refetchOnWindowFocus={false}>
       {children}
     </SessionProvider>
   );
-}
+};
 
-export default AuthSessionProvider
+export default AuthSessionProvider;

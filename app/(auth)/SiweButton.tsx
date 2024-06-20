@@ -31,19 +31,21 @@ const SiweButton = () => {
       modalOpened.current = false;
 
       try {
-        const nonce = await authChallenge(address);
-
-        const message = new SiweMessage({
+        const { nonce } = await authChallenge(address);
+        console.log(nonce);
+        const siwe = new SiweMessage({
           domain: window.location.host,
           address: address,
           statement: "Sign in with Ethereum to the app.",
           uri: window.location.origin,
           version: "1",
           chainId: chains[0].id,
-          nonce: await getCsrfToken(),
+          nonce: nonce,
         });
+
+        const message = siwe.prepareMessage();
         const signature = await signMessageAsync({
-          message: message.prepareMessage(),
+          message,
         });
 
         signIn("siwe", {
