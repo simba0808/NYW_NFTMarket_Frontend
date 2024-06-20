@@ -64,6 +64,10 @@
       1px  1px 5px #555;
   }
 
+  h3 {
+    font-size: 36px !important;
+    font-weight: 700 !important;
+  }
   
 
   li:hover {

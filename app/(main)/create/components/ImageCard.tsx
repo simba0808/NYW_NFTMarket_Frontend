@@ -1,14 +1,14 @@
 "use client";
 import React, { useEffect } from "react";
 import { useAccount } from "wagmi";
-import { Button, Card, Image } from "@nextui-org/react";
+import { Button, Card, Image, Tooltip } from "@nextui-org/react";
 import { twMerge } from "tailwind-merge";
+import { Icon } from "@iconify/react";
 
 import useSaveImage from "@/lib/hooks/image/useSaveImage";
 import useToast from "@/lib/hooks/toast/useToast";
 
 import "./style.scss";
-import PrimaryButton from "@/lib/components/button/PrimaryButton";
 
 type CardProps = {
   id: number;
@@ -27,7 +27,7 @@ export default function ImageCard(props: CardProps) {
 
   useEffect(() => {
     if (isSaved === "success") {
-      customToast("success", "Successfully saved to your arkwork");
+      customToast("success", "Successfully Saved");
       setIsSaved("");
     } else if (isSaved === "failed") {
       customToast("failed", "Already exist in your artwork");
@@ -53,11 +53,28 @@ export default function ImageCard(props: CardProps) {
         isZoomed
       />
       <div className="overlay" onClick={handleClick}>
-        <PrimaryButton
-          text="Save To Artwork"
-          onClick={() => saveImage(address as string, imgSrc, prompt)}
-        />
-        <PrimaryButton text="Mint Your NFT" />
+        <Tooltip
+          showArrow
+          content="Save to your artwork"
+          color="primary"
+          placement="bottom-end"
+          size="sm"
+        >
+          <Button
+            isIconOnly
+            className="absolute right-3 top-3 z-20 bg-background/60 backdrop-blur-md backdrop-saturate-150 dark:bg-default-100/50"
+            radius="full"
+            size="sm"
+            variant="flat"
+            onPress={() => saveImage(address as string, imgSrc, prompt)}
+          >
+            <Icon
+              className="text-default-900/50 hover:text-danger-400"
+              icon="solar:heart-bold"
+              width={20}
+            />
+          </Button>
+        </Tooltip>
       </div>
     </Card>
   );

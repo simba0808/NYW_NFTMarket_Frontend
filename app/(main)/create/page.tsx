@@ -100,8 +100,12 @@ const CreateNFT = () => {
   };
 
   const mintNow = async () => {
-    if (nftName === "" || genImg[selectedImage] === "") {
-      customToast("failed", "Select image and insert NFT name");
+    if (genImg[selectedImage] === "") {
+      customToast("failed", "Select image");
+      return;
+    }
+    if (nftName === "") {
+      customToast("failed", "Insert NFT name");
       return;
     }
 
@@ -262,7 +266,8 @@ const CreateNFT = () => {
                 )}
                 {!isGenerating && genImg.length === 3 && (
                   <div className="w-full">
-                    <div className="grid lg:grid-cols-3 gap-3">
+                    <h3>Select Image and Mint Your NFT</h3>
+                    <div className="mt-10 grid lg:grid-cols-3 gap-3">
                       {genImg.length === 3 &&
                         genImg.map((item, id) => {
                           return (

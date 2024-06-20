@@ -183,7 +183,7 @@ export default function NFTDetailView({
           </div>
           <div className="w-full">
             <h2>{detailedNFTData?.token_name}</h2>
-            <div className="flex justify-between">
+            <div className="flex justify-between mt-1">
               <div className="flex gap-2">
                 <img src="/asset/avatar.png" alt="Not Found" />
                 <div>
@@ -191,15 +191,15 @@ export default function NFTDetailView({
                   <p>User ID</p>
                 </div>
               </div>
-              <div className="flex gap-3 lg:gap-6">
+              <div className="flex items-center gap-3 lg:gap-6">
                 <span className="flex gap-1">
                   <FireIcon />
                   <span>10</span>
                 </span>
-                <span className="flex gap-1">
-                  <Button isIconOnly onClick={handleLike}>
+                <span className="flex items-center gap-1">
+                  <button onClick={handleLike}>
                     <LikeIcon />
-                  </Button>
+                  </button>
                   <span>{detailedNFTData?.likes}</span>
                 </span>
                 <span>
