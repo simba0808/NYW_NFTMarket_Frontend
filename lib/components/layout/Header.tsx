@@ -47,23 +47,23 @@ export default function Header() {
     );
   }, []);
 
-  const headerTrailing = useMemo(
-    () => (
-      <div>
-        {session && address ? (
-          <ToggleProfile />
-        ) : (
-          <PrimaryButton
-            text={path === "/signin" ? "Get Started" : "Connect Wallet"}
-            className="w-32 md:w-40"
-            onClick={() => router.push("/signin")}
-            varient="secondary"
-          />
-        )}
-      </div>
-    ),
-    [session, status]
-  );
+  // const headerTrailing = useMemo(
+  //   () => (
+  //     <div>
+  //       {session && address ? (
+  //         <ToggleProfile />
+  //       ) : (
+  //         <PrimaryButton
+  //           text={path === "/signin" ? "Get Started" : "Connect Wallet"}
+  //           className="w-32 md:w-40"
+  //           onClick={() => router.push("/signin")}
+  //           varient="secondary"
+  //         />
+  //       )}
+  //     </div>
+  //   ),
+  //   [session, status]
+  // );
 
   return (
     <div className="px-4 z-50 w-full fixed top-4">
@@ -110,61 +110,64 @@ export default function Header() {
             </Link>
           </NavbarItem>
         </NavbarContent>
-        <NavbarContent
-          className="ml-auto flex justify-center items-center h-12 max-w-fit gap-0 rounded-full p-0 px-2 bg-white/30 dark:bg-white/30"
-          justify="end"
-        >
-          {/* Mobile search */}
-          <NavbarItem className="lg:hidden">
-            <Button isIconOnly radius="full" variant="light">
-              <Icon
-                className="text-white"
-                icon="solar:magnifer-linear"
-                width={20}
-              />
-            </Button>
-          </NavbarItem>
-          {/* Theme change */}
-          <NavbarItem className="hidden lg:flex">
-            <Button isIconOnly radius="full" variant="light">
-              <Icon className="text-white" icon="solar:sun-linear" width={24} />
-            </Button>
-          </NavbarItem>
-          {/* Notifications */}
-          <NavbarItem className="flex">
-            <Popover offset={12} placement="bottom-end">
-              <PopoverTrigger>
-                <Button
-                  disableRipple
-                  isIconOnly
-                  className="overflow-visible"
-                  radius="full"
-                  variant="light"
-                >
-                  <Badge
-                    color="danger"
-                    content="5"
-                    showOutline={false}
-                    size="md"
+        {session && address ? (
+          <NavbarContent
+            className="ml-auto flex justify-center items-center h-12 max-w-fit gap-0 rounded-full p-0 px-2 bg-white/30 dark:bg-white/30"
+            justify="end"
+          >
+            {/* Theme change */}
+            <NavbarItem className="hidden lg:flex">
+              <Button isIconOnly radius="full" variant="light">
+                <Icon
+                  className="text-white"
+                  icon="solar:sun-linear"
+                  width={24}
+                />
+              </Button>
+            </NavbarItem>
+            {/* Notifications */}
+            <NavbarItem className="flex">
+              <Popover offset={12} placement="bottom-end">
+                <PopoverTrigger>
+                  <Button
+                    disableRipple
+                    isIconOnly
+                    className="overflow-visible"
+                    radius="full"
+                    variant="light"
                   >
-                    <Icon
-                      className="text-white"
-                      icon="solar:bell-linear"
-                      width={22}
-                    />
-                  </Badge>
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="max-w-[90vw] p-0 sm:max-w-[380px]">
-                <span>KKK</span>
-              </PopoverContent>
-            </Popover>
-          </NavbarItem>
-          {/* User Menu */}
-          <NavbarItem className="flex items-center">
-            {headerTrailing}
-          </NavbarItem>
-        </NavbarContent>
+                    <Badge
+                      color="danger"
+                      content="5"
+                      showOutline={false}
+                      size="md"
+                    >
+                      <Icon
+                        className="text-white"
+                        icon="solar:bell-linear"
+                        width={22}
+                      />
+                    </Badge>
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="max-w-[90vw] p-0 sm:max-w-[380px]">
+                  <span>KKK</span>
+                </PopoverContent>
+              </Popover>
+            </NavbarItem>
+            {/* User Menu */}
+            <NavbarItem className="flex items-center">
+              <ToggleProfile />
+            </NavbarItem>
+          </NavbarContent>
+        ) : (
+          <PrimaryButton
+            text={path === "/signin" ? "Get Started" : "Connect Wallet"}
+            className="w-32 md:w-40"
+            onClick={() => router.push("/signin")}
+            varient="secondary"
+          />
+        )}
 
         {/* Mobile Menu */}
         <NavbarMenu>
@@ -196,45 +199,5 @@ export default function Header() {
         </NavbarMenu>
       </Navbar>
     </div>
-    // <div className="header__wrapper overflow-x bg-dark-blue shadow-lg shadow-white/10">
-    //   <div className=" bg-white/5">
-    //     <div className="header__container">
-    //       <header className="flex flex-row items-center justify-between">
-    //         {logoElement}
-    //         <ul className="hidden md:flex items-center justify-between gap-[28px]">
-    //           <li
-    //             role="button"
-    //             tabIndex={0}
-    //             onClick={() => router.push("/explore")}
-    //           >
-    //             <span>Explorer NFT</span>
-    //           </li>
-    //           <li
-    //             role="button"
-    //             tabIndex={0}
-    //             onClick={() => router.push("/create")}
-    //           >
-    //             <span>Create NFT</span>
-    //           </li>
-    //           <li
-    //             role="button"
-    //             tabIndex={0}
-    //             onClick={() => router.push("/earn")}
-    //           >
-    //             <span>EARN</span>
-    //           </li>
-    //           <li
-    //             role="button"
-    //             tabIndex={0}
-    //             onClick={() => router.push("/campaign")}
-    //           >
-    //             <span>Campaigns</span>
-    //           </li>
-    //         </ul>
-    //         {headerTrailing}
-    //       </header>
-    //     </div>
-    //   </div>
-    // </div>
   );
 }
