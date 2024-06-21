@@ -18,6 +18,7 @@ import { shortenAddress } from "@/lib/components/profile/profile-kit/ProfileHead
 
 import { postServer } from "@/lib/net/fetch/fetch";
 import useNFTList from "@/lib/web3/hook/useNFTList";
+import useNFTApprove from "@/lib/web3/hook/nft/useNFTApprove";
 import useToast from "@/lib/hooks/toast/useToast";
 
 import type { NFTData } from "@/app/(main)/profile/tabs/TabNFT";
@@ -45,6 +46,8 @@ const NFTModal: FC<Props> = ({ type, isOpen, onClose, data }) => {
     delistNFT,
   } = useNFTList();
 
+  const { approveNFT } = useNFTApprove();
+
   const customToast = useToast();
 
   const handleListNFT = async () => {
@@ -66,6 +69,8 @@ const NFTModal: FC<Props> = ({ type, isOpen, onClose, data }) => {
       if (tx) {
         setTimeout(async () => {
           if (tx) {
+            await approveNFT(data?.token_id as number);
+
             const response = await postServer("/nft/list", {
               tx,
               address: address as string,
