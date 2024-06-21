@@ -2,14 +2,32 @@
 import Image from "next/image";
 import { Tabs, Tab } from "@nextui-org/react";
 import { Icon } from "@iconify/react";
+import { useState } from "react";
 import { useAccount } from "wagmi";
+import { useDisclosure } from "@nextui-org/react";
+import { useMediaQuery, useTheme } from "@mui/material";
 
+import NFTModal from "@/lib/components/modal/NFTModal";
 import { CopyLink } from "@/lib/components/profile/profile-kit/ProfileHeader";
 import TabNFT from "./tabs/TabNFT";
 import TabArtwork from "./tabs/TabArtwork";
+import TabListed from "./tabs/TabList";
+
+import type { NFTData } from "./tabs/TabNFT";
 
 const ProfilePage = () => {
+  const theme = useTheme();
+  const screenSize = {
+    isSmall: useMediaQuery(theme.breakpoints.down("md")),
+    isMedium: useMediaQuery(theme.breakpoints.between("md", "xl")),
+    isLarge: useMediaQuery(theme.breakpoints.up("xl")),
+  };
+
   const { address } = useAccount();
+  const { isOpen, onClose, onOpen } = useDisclosure();
+
+  const [selectedData, setSelectedData] = useState<NFTData>();
+  const [modalType, setModalType] = useState<"list" | "delist">("list");
 
   return (
     <div className="main-pt">
@@ -42,7 +60,9 @@ const ProfilePage = () => {
                   </div>
                 }
               >
-                <TabArtwork />
+                <TabArtwork
+                  cols={screenSize.isLarge ? 4 : screenSize.isMedium ? 3 : 2}
+                />
               </Tab>
               <Tab
                 key="nft"
@@ -55,7 +75,12 @@ const ProfilePage = () => {
                 }
                 className="w-full"
               >
-                <TabNFT />
+                <TabNFT
+                  setModalType={setModalType}
+                  setSelected={setSelectedData}
+                  open={onOpen}
+                  cols={screenSize.isLarge ? 4 : screenSize.isMedium ? 3 : 2}
+                />
               </Tab>
               <Tab
                 key="list"
@@ -67,7 +92,12 @@ const ProfilePage = () => {
                   </div>
                 }
               >
-                <h2>Listing</h2>
+                <TabListed
+                  setModalType={setModalType}
+                  setSelected={setSelectedData}
+                  open={onOpen}
+                  cols={screenSize.isLarge ? 4 : screenSize.isMedium ? 3 : 2}
+                />
               </Tab>
               <Tab
                 key="like"
@@ -85,6 +115,13 @@ const ProfilePage = () => {
           </div>
         </div>
       </div>
+
+      <NFTModal
+        type={modalType}
+        isOpen={isOpen}
+        onClose={onClose}
+        data={selectedData}
+      />
     </div>
   );
 };

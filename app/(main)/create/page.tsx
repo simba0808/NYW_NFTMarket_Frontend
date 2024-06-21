@@ -48,6 +48,7 @@ const CreateNFT = () => {
   const [model_id, setModel_id] = useState("");
   const [imageSize, setImageSize] = useState(0);
   const [nftName, setNftName] = useState("");
+  const [royalty, setRoyalty] = useState(0);
 
   //hooks
 
@@ -122,7 +123,7 @@ const CreateNFT = () => {
 
         console.log(metadataURL);
         try {
-          const tx = await mintNFT(metadataURL);
+          const tx = await mintNFT(metadataURL, royalty);
           setTimeout(async () => {
             if (tx) {
               const response = await postServer("/nft/save", {
@@ -283,25 +284,47 @@ const CreateNFT = () => {
                         })}
                     </div>
                     <Spacer y={6} />
-                    <Input
-                      aria-label="Search"
-                      classNames={{
-                        inputWrapper: "w-full h-full bg-white/10 py-2",
-                        input: "text-lg",
-                      }}
-                      value={nftName}
-                      onChange={(e) => setNftName(e.target.value)}
-                      labelPlacement="outside"
-                      placeholder="Input your NFT name"
-                      radius="sm"
-                      endContent={
-                        <PrimaryButton
-                          onClick={mintNow}
-                          text="Mint Now"
-                          isLoading={isMintLoading}
-                        />
-                      }
-                    />
+                    <div className="flex gap-3">
+                      <Input
+                        type="number"
+                        min={0}
+                        placeholder="Royalty"
+                        value={royalty.toString()}
+                        onChange={(e) => setRoyalty(parseInt(e.target.value))}
+                        classNames={{
+                          inputWrapper:
+                            "w-full h-full bg-white/10 py-2 rounded-md",
+                          input: "text-lg",
+                          base: "max-w-[200px]",
+                        }}
+                        startContent={
+                          <div className="pointer-events-none flex items-center">
+                            <span className="text-default-400 text-small">
+                              %
+                            </span>
+                          </div>
+                        }
+                      />
+                      <Input
+                        aria-label="Search"
+                        classNames={{
+                          inputWrapper: "w-full h-full bg-white/10 py-2",
+                          input: "text-lg",
+                        }}
+                        value={nftName}
+                        onChange={(e) => setNftName(e.target.value)}
+                        labelPlacement="outside"
+                        placeholder="Input your NFT name"
+                        radius="sm"
+                        endContent={
+                          <PrimaryButton
+                            onClick={mintNow}
+                            text="Mint Now"
+                            isLoading={isMintLoading}
+                          />
+                        }
+                      />
+                    </div>
                   </div>
                 )}
               </div>
