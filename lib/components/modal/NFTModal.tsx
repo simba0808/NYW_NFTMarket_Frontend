@@ -1,4 +1,5 @@
-import { use, useState, type FC } from "react";
+import { useState, type FC } from "react";
+import { useAccount } from "wagmi";
 import {
   Accordion,
   AccordionItem,
@@ -14,19 +15,95 @@ import { Icon } from "@iconify/react";
 
 import PrimaryButton from "@/lib/components/button/PrimaryButton";
 import { shortenAddress } from "@/lib/components/profile/profile-kit/ProfileHeader";
+
+import { postServer } from "@/lib/net/fetch/fetch";
 import useNFTList from "@/lib/web3/hook/useNFTList";
+import useToast from "@/lib/hooks/toast/useToast";
 
 import type { NFTData } from "@/app/(main)/profile/tabs/TabNFT";
+import { ethers } from "ethers";
 
 type Props = {
+  type: "list" | "delist";
   isOpen: boolean;
   onClose: () => void;
   data: NFTData | undefined;
 };
 
-const NFTModal: FC<Props> = ({ isOpen, onClose, data }) => {
+const NFTModal: FC<Props> = ({ type, isOpen, onClose, data }) => {
   const [listPrice, setListPrice] = useState<string>("");
-  const { isListLoading, isListSuccess, listNFT } = useNFTList();
+
+  const { address } = useAccount();
+  const {
+    isPendingList,
+    isListLoading,
+    isListSuccess,
+    isPendingDeList,
+    isDeListLoading,
+    isDeListSuccess,
+    listNFT,
+    delistNFT,
+  } = useNFTList();
+
+  const customToast = useToast();
+
+  const handleListNFT = async () => {
+    if (data?.token_id === undefined || data?.token_id === null) {
+      customToast("failed", "Invalid Token ID");
+      return;
+    }
+    if (listPrice === "") {
+      customToast("failed", "Please enter a price");
+      return;
+    }
+
+    try {
+      const tx = await listNFT(
+        data?.token_id as number,
+        ethers.parseEther(listPrice)
+      );
+
+      if (tx) {
+        setTimeout(async () => {
+          if (tx) {
+            const response = await postServer("/nft/list", {
+              tx,
+              address: address as string,
+              token_id: data?.token_id as number,
+              price: listPrice,
+            });
+          }
+        }, 30000);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleDelistNFT = async () => {
+    if (data?.token_id === undefined || data?.token_id === null) {
+      customToast("failed", "Invalid Token ID");
+      return;
+    }
+
+    try {
+      const tx = await delistNFT(data?.token_id as number);
+
+      if (tx) {
+        setTimeout(async () => {
+          if (tx) {
+            const response = await postServer("/nft/delist", {
+              tx,
+              address: address as string,
+              token_id: data?.token_id as number,
+            });
+          }
+        }, 30000);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <Modal
@@ -42,8 +119,9 @@ const NFTModal: FC<Props> = ({ isOpen, onClose, data }) => {
             <ModalHeader className="flex flex-col gap-1">
               {data?.token_name}
             </ModalHeader>
-            <ModalBody className="font-small">
+            <ModalBody className="font-small items-center">
               <Image
+                className="max-h-[600px]"
                 src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${data?.asset_url}`}
                 alt="NYW"
               />
@@ -85,19 +163,30 @@ const NFTModal: FC<Props> = ({ isOpen, onClose, data }) => {
               </Accordion>
             </ModalBody>
             <ModalFooter>
-              <Input
-                classNames={{
-                  inputWrapper: "w-full h-full bg-white/10 py-2",
-                  input: "text-md",
-                }}
-                placeholder="Insert Listing Price"
-                value={listPrice}
-                onChange={(e) => setListPrice(e.target.value)}
-                // endContent={
-                //   // <PrimaryButton text="List Now" onClick={() => listNFT(parseInt(data?.token_id as string), listPrice,  )} />}
-                //   // />
-                // }
-              />
+              {type === "list" ? (
+                <Input
+                  classNames={{
+                    inputWrapper: "w-full h-full bg-white/10 py-2",
+                    input: "text-md",
+                  }}
+                  placeholder="Insert Listing Price"
+                  value={listPrice}
+                  onChange={(e) => setListPrice(e.target.value)}
+                  endContent={
+                    <PrimaryButton
+                      isLoading={isListLoading || isPendingList}
+                      text="List Now"
+                      onClick={handleListNFT}
+                    />
+                  }
+                />
+              ) : (
+                <PrimaryButton
+                  isLoading={isDeListLoading || isPendingDeList}
+                  text="Delist"
+                  onClick={handleDelistNFT}
+                />
+              )}
             </ModalFooter>
           </>
         )}

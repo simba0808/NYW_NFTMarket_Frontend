@@ -161,11 +161,6 @@
         "internalType": "uint256",
         "name": "price",
         "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "royalty",
-        "type": "uint256"
       }
     ],
     "name": "listNft",

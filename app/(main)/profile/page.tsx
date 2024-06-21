@@ -7,10 +7,11 @@ import { useAccount } from "wagmi";
 import { useDisclosure } from "@nextui-org/react";
 import { useMediaQuery, useTheme } from "@mui/material";
 
-import TabNFT from "./tabs/TabNFT";
-import TabArtwork from "./tabs/TabArtwork";
 import NFTModal from "@/lib/components/modal/NFTModal";
 import { CopyLink } from "@/lib/components/profile/profile-kit/ProfileHeader";
+import TabNFT from "./tabs/TabNFT";
+import TabArtwork from "./tabs/TabArtwork";
+import TabListed from "./tabs/TabList";
 
 import type { NFTData } from "./tabs/TabNFT";
 
@@ -26,6 +27,7 @@ const ProfilePage = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();
 
   const [selectedData, setSelectedData] = useState<NFTData>();
+  const [modalType, setModalType] = useState<"list" | "delist">("list");
 
   return (
     <div className="main-pt">
@@ -74,6 +76,7 @@ const ProfilePage = () => {
                 className="w-full"
               >
                 <TabNFT
+                  setModalType={setModalType}
                   setSelected={setSelectedData}
                   open={onOpen}
                   cols={screenSize.isLarge ? 4 : screenSize.isMedium ? 3 : 2}
@@ -89,7 +92,12 @@ const ProfilePage = () => {
                   </div>
                 }
               >
-                <h2>Listing</h2>
+                <TabListed
+                  setModalType={setModalType}
+                  setSelected={setSelectedData}
+                  open={onOpen}
+                  cols={screenSize.isLarge ? 4 : screenSize.isMedium ? 3 : 2}
+                />
               </Tab>
               <Tab
                 key="like"
@@ -108,7 +116,12 @@ const ProfilePage = () => {
         </div>
       </div>
 
-      <NFTModal isOpen={isOpen} onClose={onClose} data={selectedData} />
+      <NFTModal
+        type={modalType}
+        isOpen={isOpen}
+        onClose={onClose}
+        data={selectedData}
+      />
     </div>
   );
 };

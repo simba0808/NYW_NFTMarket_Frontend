@@ -1,25 +1,14 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
-import { useAccount } from "wagmi";
-import { useRouter } from "next/navigation";
 import { Image } from "@nextui-org/react";
-import Box from "@mui/material/Box";
-import ImageList from "@mui/material/ImageList";
+import { useAccount } from "wagmi";
+import { Box, ImageList } from "@mui/material";
 
 import { postServer } from "@/lib/net/fetch/fetch";
 
-export type NFTData = {
-  token_id: number;
-  token_name: string;
-  metadata_hash: string;
-  owner: string;
-  creator: string;
-  asset_url: string;
-  asset_hash: string;
-  prompt: string;
-};
+import type { NFTData } from "./TabNFT";
 
-const TabNFT = ({
+const TabListed = ({
   cols,
   setModalType,
   setSelected,
@@ -30,14 +19,15 @@ const TabNFT = ({
   setSelected: (type: NFTData | undefined) => void;
   open: () => void;
 }) => {
-  //const router = useRouter();
   const { address, isConnected } = useAccount();
-  const [myNFTs, setMyNFTs] = useState<NFTData[]>([]);
 
-  const fetchMyNFTs = useCallback(async () => {
+  const [listed, setListed] = useState<NFTData[]>([]);
+
+  const fetchListed = useCallback(async () => {
     try {
-      const res = await postServer("/nft/myNFTs", { address });
-      setMyNFTs(res);
+      const res = await postServer("/nft/listed", { address });
+
+      setListed(res);
     } catch (err) {
       console.log(err);
     }
@@ -45,13 +35,13 @@ const TabNFT = ({
 
   useEffect(() => {
     if (address && isConnected) {
-      fetchMyNFTs();
+      fetchListed();
     }
   }, [address, isConnected]);
 
-  const handleClick = (id: number) => {
-    setModalType("list");
-    setSelected(myNFTs.find((nft) => nft.token_id === id));
+  const handleDelist = async (id: number) => {
+    setModalType("delist");
+    setSelected(listed.find((nft) => nft.token_id === id));
     open();
   };
 
@@ -59,7 +49,7 @@ const TabNFT = ({
     <div className="flex flex-wrap">
       <Box sx={{ width: "100%", overflowY: "none" }}>
         <ImageList variant="masonry" cols={cols} gap={10}>
-          {myNFTs.map((nft, index) => {
+          {listed.map((nft, index) => {
             return (
               <Image
                 key={nft.token_id}
@@ -69,7 +59,7 @@ const TabNFT = ({
                 className="py-1 rounded-lg hover:cursor-pointer"
                 onClick={
                   //() => router.push(`/nft/${nft.asset_hash}`)
-                  () => handleClick(nft.token_id)
+                  () => handleDelist(nft.token_id)
                 }
               />
             );
@@ -80,4 +70,4 @@ const TabNFT = ({
   );
 };
 
-export default TabNFT;
+export default TabListed;

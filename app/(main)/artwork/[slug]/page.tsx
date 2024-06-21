@@ -28,6 +28,7 @@ export default function ArtworkDetailView({
   const [detailedArtworkData, setDetailedArtworkData] =
     useState<DetailedArtworkData | null>();
   const [nftName, setNftName] = useState("");
+  const [royalty, setRoyalty] = useState(0);
 
   const { isMintLoading, isMintSuccess, mintNFT } = useNFTMint();
   const customToast = useToast();
@@ -68,16 +69,19 @@ export default function ArtworkDetailView({
 
         console.log(metadataURL);
         try {
-          const tx = await mintNFT(metadataURL);
-          setTimeout(async () => {
-            if (tx) {
-              const response = await postServer("/nft/save", {
-                tx,
-                assetURL,
-                prompt: detailedArtworkData?.image_prompt,
-              });
-            }
-          }, 30000);
+          const tx = await mintNFT(metadataURL, royalty);
+
+          if (tx) {
+            setTimeout(async () => {
+              if (tx) {
+                const response = await postServer("/nft/save", {
+                  tx,
+                  assetURL,
+                  prompt: detailedArtworkData?.image_prompt,
+                });
+              }
+            }, 30000);
+          }
         } catch (err) {
           console.log(err);
         }
@@ -123,7 +127,24 @@ export default function ArtworkDetailView({
           <PromptAccordion text={detailedArtworkData?.image_prompt || ""} />
         </div>
 
-        <div className="mt-6">
+        <div className="mt-6 flex gap-3">
+          <Input
+            type="number"
+            min={0}
+            placeholder="Royalty"
+            value={royalty.toString()}
+            onChange={(e) => setRoyalty(parseInt(e.target.value))}
+            classNames={{
+              inputWrapper: "w-full h-full bg-white/10 py-2 rounded-md",
+              input: "text-lg",
+              base: "max-w-[200px]",
+            }}
+            startContent={
+              <div className="pointer-events-none flex items-center">
+                <span className="text-default-400 text-small">%</span>
+              </div>
+            }
+          />
           <Input
             classNames={{
               inputWrapper: "w-full h-full bg-white/10 py-2",
