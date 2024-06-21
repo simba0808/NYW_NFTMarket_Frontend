@@ -2,19 +2,29 @@
 import { useEffect, useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useAccount, useWriteContract } from "wagmi";
-import { Breadcrumbs, BreadcrumbItem, Tab, Tabs, Spinner, Spacer, Input } from "@nextui-org/react";
+import { useAccount } from "wagmi";
+import {
+  Breadcrumbs,
+  BreadcrumbItem,
+  Tab,
+  Tabs,
+  Spinner,
+  Spacer,
+  Input,
+} from "@nextui-org/react";
 
 import TabImage from "./components/tabs/TabImage";
 import TabVideo from "./components/tabs/TabVideo";
 import TabMusic from "./components/tabs/TabMusic";
 import ImageCard from "./components/ImageCard";
-import PrimaryButton from "@/lib/components/button/PrimaryButton";
-
-import NFTABI from "@/lib/web3/contracts/NYWNFT.json";
 import { GalleryIcon } from "./components/icons/GalleryIcon";
 import { VideoIcon } from "./components/icons/VideoIcon";
 import { MusicIcon } from "./components/icons/MusicIcon";
+import PrimaryButton from "@/lib/components/button/PrimaryButton";
+
+import { postServer } from "@/lib/net/fetch/fetch";
+import useToast from "@/lib/hooks/toast/useToast";
+import useNFTMint from "@/lib/web3/hook/nft/useNFTMint";
 
 enum WorkingTabs {
   Image = "image",
@@ -22,27 +32,25 @@ enum WorkingTabs {
   Music = "music",
 }
 
-const MARKET_ADDRESS = (
-  process.env.NEXT_PUBLIC_MARKET_ADDRESS
-) as `0x${string}`;
-
 const CreateNFT = () => {
-  const router = useRouter()
+  const router = useRouter();
   const { data } = useSession();
   const { isConnected, address } = useAccount();
 
-  const { writeContractAsync: mintNFTAsync } = useWriteContract()
+  const customToast = useToast();
+  const { isPendingMint, isMintLoading, isMintSuccess, mintNFT } = useNFTMint();
 
   const [activeTab, setActiveTab] = useState<WorkingTabs>(WorkingTabs.Image);
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [genImg, setGenImg] = useState<any[]>([]);
   const [selectedImage, setSelectedImage] = useState(0);
-  const [isCreating, setIsCreating] = useState(false);
   const [inputText, setInputText] = useState("");
-  const [model_id, setModel_id] = useState('');
+  const [model_id, setModel_id] = useState("");
   const [imageSize, setImageSize] = useState(0);
-
   const [nftName, setNftName] = useState("");
+  const [royalty, setRoyalty] = useState(0);
+
+  //hooks
 
   const imageSizeArr = [
     { width: 1024, height: 1024 },
@@ -50,18 +58,17 @@ const CreateNFT = () => {
     { width: 768, height: 1024 },
     { width: 1024, height: 576 },
     { width: 576, height: 1024 },
-  ]
+  ];
 
   useEffect(() => {
-    console.log(data, address, isConnected)
     if (data?.provider !== "siwe" || (isConnected === false && !address)) {
       signOut({
-        redirect: false
-      })
+        redirect: false,
+      });
       router.push("/signin");
     }
     const divElement = document.getElementById("detailed-container");
-    if(divElement) {
+    if (divElement) {
       window.scrollTo({
         top: divElement.getBoundingClientRect().top + window.pageYOffset - 120,
         behavior: "smooth", // Optional: Add smooth scrolling effect
@@ -69,151 +76,73 @@ const CreateNFT = () => {
     }
   }, []);
 
-  const [isLoading, setIsLoading] = useState(false);
-  const GenerateImage = () => {
+  useEffect(() => {
+    if (isMintSuccess) {
+      customToast("success", "Successfully minted your NFT");
+    }
+  }, [isMintSuccess]);
+
+  const GenerateImage = async () => {
     setIsGenerating(true);
-    setIsLoading(true);
-    var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-
-    var raw = JSON.stringify({
-      key: "gkHp5WXV99e8TKY8R4ctMcnYED7p4twNXZ2BX85V8FFh9FmcGOhMiBx4KMIw",
-      prompt: inputText,
-      model_id: model_id,
-      negative_prompt: "bad quality",
-      width: imageSizeArr[imageSize-1].width,
-      height: imageSizeArr[imageSize-1].height,
-      safety_checker: false,
-      seed: null,
-      num_inference_steps: "31",
-      enhance_prompt: true,
-      guidance_scale: 7.5,
-      multi_lingual: true,
-      panorama: true,
-      self_attention: true,
-      upscale: "no",
-      embeddings_model: null,
-      lora_model: null,
-      tomesd: "yes",
-      clip_skip: "2",
-      use_karras_sigmas: true,
-      vae: null,
-      lora_strength: null,
-      scheduler: "UniPCMultistepScheduler",
-      samples: 3,
-      base64: false,
-      webhook: null,
-      track_id: null,
-    });
-    const requestOptions: RequestInit = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-
-    fetch("https://modelslab.com/api/v6/images/text2img", requestOptions)
-      .then((response) => response.text())
-      .then((result) => {
-        const resultImage = JSON.parse(result);
-        console.log(resultImage);
-        if (resultImage.status === "error") {
-          // showToast("error", resultImage.message);
-          return;
-        }
-
-        const imageData = resultImage.output;
-        console.log({ imageData });
-        setGenImg([imageData[0], imageData[1], imageData[2]]);
-        setIsGenerating(false);
-        setIsLoading(false);
-      })
-      .catch((error) => console.log("error", error));
-  };
-
-  const token = process.env.NEXT_PUBLIC_PINATA_JWT;
-
-  const uploadJSONToIPFS = async (JSONBody: any) => {
-    const url = `https://api.pinata.cloud/pinning/pinJSONToIPFS`;
     try {
-      const res = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(JSONBody)
+      const response = await postServer("/artwork/generate", {
+        prompt: inputText,
+        model_id: model_id,
+        width: imageSizeArr[imageSize - 1].width,
+        height: imageSizeArr[imageSize - 1].height,
       });
-      
-      const data: any = res.json();
-    
-      return {
-        success: true,
-        pinataURL: `https://gateway.pinata.cloud/ipfs/${data.IpfsHash}`
-      };
-    } catch (error: any) {
-      console.error(error.message);
-      return {
-        success: false,
-        message: error.message,
-      };
+
+      setGenImg(response.generated_images);
+      setIsGenerating(false);
+    } catch (err) {
+      setIsGenerating(false);
+      console.log(err);
     }
   };
-  
-  const uploadMetadata = async (nftName: string, nftAssetURL: string) => {
-    console.log(nftName, nftAssetURL)
-    return new Promise(async (resolve, reject) => {
-      if (!nftName || !nftAssetURL) {
-        reject(new Error("Missing nftColName or nftFileURL"));
-        return;
-      }
-
-      const nftJSON = {
-        name: nftName,
-        image: nftAssetURL, 
-        description: "Your NFT description here", // Add a description field if you want
-        attributes: [], // Add any custom attributes you want here
-      };
-
-      console.log("Json", nftJSON)
-      try {
-        const res = await uploadJSONToIPFS(nftJSON); // Since uploadJSONToIPFS looks like an async function
-        if (res.success === true) {
-          resolve(res);
-        } else {
-          throw new Error('Uploading to Pinata failed');
-        }
-      } catch (err) {
-        reject(err);
-      }
-    });
-  }
-
 
   const mintNow = async () => {
-    if (nftName === "" || genImg[selectedImage] === "") {
-      alert("Select image and insert nft name");
+    if (genImg[selectedImage] === "") {
+      customToast("failed", "Select image");
       return;
-    } else {
-      const uploadRes: any = await uploadMetadata(nftName, genImg[selectedImage]);
-      console.log(uploadRes)
-      if (uploadRes.success === true) {
-        const metadataURL = uploadRes?.pinataURL
+    }
+    if (nftName === "") {
+      customToast("failed", "Insert NFT name");
+      return;
+    }
 
+    try {
+      const res = await postServer("/nft/mint", {
+        address: address as string,
+        name: nftName,
+        url: genImg[selectedImage],
+        prompt: inputText,
+      });
+
+      if (res.success === true) {
+        const { nft_name, metadataURL, assetURL } = res;
+
+        console.log(metadataURL);
         try {
-          const tx2 = await mintNFTAsync({
-            address: MARKET_ADDRESS,
-            abi: NFTABI,
-            functionName: "create",
-            args: [metadataURL],
-          });
-          console.log(tx2)
+          const tx = await mintNFT(metadataURL, royalty);
+          setTimeout(async () => {
+            if (tx) {
+              const response = await postServer("/nft/save", {
+                tx,
+                nft_name,
+                assetURL,
+                prompt: inputText,
+              });
+            }
+          }, 30000);
         } catch (err) {
-          console.log(err)
+          console.log(err);
         }
       }
+    } catch (err) {
+      console.error(err);
+      customToast("failed", "Failed to mint NFT");
     }
-  }
+  };
 
   return (
     <div>
@@ -283,31 +212,26 @@ const CreateNFT = () => {
                   }
                 />
               </Tabs>
-              {
-                <TabImage 
-                  modelSetter={setModel_id} 
-                  inputText={inputText} 
-                  setInputText={setInputText} 
+              {(
+                <TabImage
+                  modelSetter={setModel_id}
+                  inputText={inputText}
+                  setInputText={setInputText}
                   imageSize={imageSize}
                   setImageSize={setImageSize}
-                /> ||
-                activeTab == WorkingTabs.Video && <TabVideo /> ||
-                activeTab == WorkingTabs.Music && <TabMusic />
-              }
+                />
+              ) ||
+                (activeTab == WorkingTabs.Video && <TabVideo />) ||
+                (activeTab == WorkingTabs.Music && <TabMusic />)}
               <div className="flex flex-col gap-3 py-6">
                 <div className="flex justify-center">
                   <PrimaryButton
                     text="Create Now"
                     onClick={() => {
                       GenerateImage();
-                      setIsCreating(true);
                     }}
-                    isLoading={isLoading}
+                    isLoading={isGenerating}
                   />
-                </div>
-                <p className="text-center">Cost: 2 $cNYW</p>
-                <div className="py-2 bg-white/5 text-xs text-center rounded-md">
-                  You don't have enough $cNYW to create. Get More $cNYW
                 </div>
               </div>
             </div>
@@ -315,7 +239,14 @@ const CreateNFT = () => {
           <div className="w-full p-4 bg-white/5 rounded-md">
             <div className="lg:h-[calc(100vh-220px)]  ">
               <div className="w-full h-full flex justify-center items-center text-center">
-                {!isCreating ? (
+                {isGenerating && (
+                  <Spinner
+                    label="Loading..."
+                    size="lg"
+                    style={{ color: "#15BFFD", background: "transparent" }}
+                  />
+                )}
+                {!isGenerating && genImg.length !== 3 && (
                   <div className="max-w-[500px] flex justify-center items-center flex-col text-center">
                     <img src="/generate.svg" alt="Not Found" />
                     <p>Generated images will appear here</p>
@@ -329,50 +260,67 @@ const CreateNFT = () => {
                       text="Use sample prompt"
                     />
                   </div>
-                ) : (
-                  <div className="w-full flex justify-center items-center flex-col">
-                    {isGenerating ? (
-                      <Spinner
-                        label="Loading..."
-                        size="lg"
-                        style={{ color: "#15BFFD", background: "transparent" }}
-                      />
-                    ) : (
-                      <div className="w-full">
-                        <div className="grid lg:grid-cols-3 gap-3">
-                          {genImg.length === 3 && genImg.map((item, id) => {
-                            return (
-                              <ImageCard
-                                id={id}
-                                selectedImage={selectedImage}
-                                setSelectedImage={setSelectedImage}
-                                imgSrc={item}
-                              />
-                            );
-                          })}
-                        </div>
-                        <Spacer y={6} />
-                          {!isCreating ? (
-                            <div></div>
-                          ) : (
-                            <Input
-                              aria-label="Search"
-                              classNames={{
-                                inputWrapper: "w-full h-full bg-white/10 py-2",
-                                input: "text-lg"
-                              }}
-                              value={nftName}
-                              onChange={(e) => setNftName(e.target.value)}
-                              labelPlacement="outside"
-                              placeholder="Input your NFT name"
-                              radius="sm"
-                              endContent={
-                                <PrimaryButton onClick={mintNow} text="Mint Now" />
-                              }
+                )}
+                {!isGenerating && genImg.length === 3 && (
+                  <div className="w-full">
+                    <h3>Select Image and Mint Your NFT</h3>
+                    <div className="mt-10 grid lg:grid-cols-3 gap-3">
+                      {genImg.length === 3 &&
+                        genImg.map((item, id) => {
+                          return (
+                            <ImageCard
+                              key={id}
+                              id={id}
+                              selectedImage={selectedImage}
+                              setSelectedImage={setSelectedImage}
+                              imgSrc={item}
+                              prompt={inputText}
                             />
-                          )}
-                      </div>
-                    )}
+                          );
+                        })}
+                    </div>
+                    <Spacer y={6} />
+                    <div className="flex gap-3">
+                      <Input
+                        type="number"
+                        min={0}
+                        placeholder="Royalty"
+                        value={royalty.toString()}
+                        onChange={(e) => setRoyalty(parseInt(e.target.value))}
+                        classNames={{
+                          inputWrapper:
+                            "w-full h-full bg-white/10 py-2 rounded-md",
+                          input: "text-lg",
+                          base: "max-w-[200px]",
+                        }}
+                        startContent={
+                          <div className="pointer-events-none flex items-center">
+                            <span className="text-default-400 text-small">
+                              %
+                            </span>
+                          </div>
+                        }
+                      />
+                      <Input
+                        aria-label="Search"
+                        classNames={{
+                          inputWrapper: "w-full h-full bg-white/10 py-2",
+                          input: "text-lg",
+                        }}
+                        value={nftName}
+                        onChange={(e) => setNftName(e.target.value)}
+                        labelPlacement="outside"
+                        placeholder="Input your NFT name"
+                        radius="sm"
+                        endContent={
+                          <PrimaryButton
+                            onClick={mintNow}
+                            text="Mint Now"
+                            isLoading={isPendingMint || isMintLoading}
+                          />
+                        }
+                      />
+                    </div>
                   </div>
                 )}
               </div>

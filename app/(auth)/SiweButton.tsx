@@ -6,6 +6,7 @@ import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { useAccount, useConfig, useDisconnect, useSignMessage } from "wagmi";
 import { Button } from "@nextui-org/button";
 
+import { authChallenge } from "@/lib/net/modules/auth";
 import WalletIcon from "@/public/icon/wallet.svg";
 
 const SiweButton = () => {
@@ -17,37 +18,41 @@ const SiweButton = () => {
   const modalOpened = useRef(false);
 
   const onSignIn = useCallback(async () => {
-    const callbackUrl = "/explore"
+    const callbackUrl = "/explore";
     if (!address) {
       localStorage.removeItem("wallteconnet");
       localStorage.removeItem("wagmi.wallet");
       localStorage.removeItem("wagmi.store");
       localStorage.removeItem("wagmi.connected");
-      
+
       modalOpened.current = true;
       open();
     } else {
       modalOpened.current = false;
 
       try {
-        const message = new SiweMessage({
+        const { nonce } = await authChallenge(address);
+        console.log(nonce);
+        const siwe = new SiweMessage({
           domain: window.location.host,
           address: address,
           statement: "Sign in with Ethereum to the app.",
           uri: window.location.origin,
           version: "1",
           chainId: chains[0].id,
-          nonce: await getCsrfToken(),
+          nonce: nonce,
         });
+
+        const message = siwe.prepareMessage();
         const signature = await signMessageAsync({
-          message: message.prepareMessage(),
+          message,
         });
 
         signIn("siwe", {
           message: JSON.stringify(message),
           redirect: true,
           signature,
-          callbackUrl
+          callbackUrl,
         });
       } catch (error) {
         console.log(error);
@@ -59,7 +64,7 @@ const SiweButton = () => {
     if (address && modalOpened.current) {
       onSignIn();
     }
-  }, [address, onSignIn])
+  }, [address, onSignIn]);
 
   return (
     <Button
@@ -70,6 +75,6 @@ const SiweButton = () => {
       Sign Up with Wallet
     </Button>
   );
-}
+};
 
 export default SiweButton;

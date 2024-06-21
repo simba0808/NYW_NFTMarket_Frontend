@@ -4,8 +4,15 @@ import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAccount } from "wagmi";
 import { signIn, useSession } from "next-auth/react";
-import {Button, Input, Link, Divider, User, Checkbox} from "@nextui-org/react";
-import {Icon} from "@iconify/react";
+import {
+  Button,
+  Input,
+  Link,
+  Divider,
+  User,
+  Checkbox,
+} from "@nextui-org/react";
+import { Icon } from "@iconify/react";
 
 import PrimaryButton from "@/lib/components/button/PrimaryButton";
 
@@ -14,7 +21,7 @@ import SiweButton from "../SiweButton";
 type Props = {
   accessToken: string;
   provider: string;
-}
+};
 
 export default function Component() {
   const { address, isConnected } = useAccount();
@@ -33,21 +40,20 @@ export default function Component() {
   const toggleVisibility = () => setIsVisible(!isVisible);
 
   return (
-    <div className="pt-[100px] relative flex h-screen w-screen">
+    <div className="auth__container relative flex w-screen">
       {/* Right side */}
-      <div
-        className="relative hidden w-1/2 p-2 flex-col-reverse lg:flex"
-      >
+      <div className="relative hidden w-1/2 p-2 flex-col-reverse lg:flex">
         <div className="w-full h-full p-2 bg-white/5 rounded-md">
           <div
             className="w-full h-full rounded-md"
             style={{
-              backgroundImage:
-                "url('/login.png')",
+              backgroundImage: "url('/login.png')",
               backgroundSize: "cover",
               backgroundPosition: "center",
             }}
-          > </div>
+          >
+            {" "}
+          </div>
         </div>
       </div>
 
@@ -56,10 +62,15 @@ export default function Component() {
         <div className="flex w-full max-w-sm flex-col items-center gap-4 p-4">
           <div className="w-full text-left">
             <p className="pb-2 text-xl font-medium">Sign In</p>
-            <p className="text-small text-default-500">Log in to your account to continue</p>
+            <p className="text-small text-default-500">
+              Log in to your account to continue
+            </p>
           </div>
 
-          <form className="flex w-full flex-col gap-3" onSubmit={(e) => e.preventDefault()}>
+          <form
+            className="flex w-full flex-col gap-3"
+            onSubmit={(e) => e.preventDefault()}
+          >
             <Input
               label="Email Address"
               name="email"
@@ -111,7 +122,9 @@ export default function Component() {
               startContent={<Icon icon="flat-color-icons:google" width={24} />}
               variant="bordered"
               onClick={() => {
-                signIn("google", { callbackUrl: "http://localhost:3000/explore" });
+                signIn("google", {
+                  callbackUrl: "http://localhost:3000/explore",
+                });
               }}
             >
               Continue with Google

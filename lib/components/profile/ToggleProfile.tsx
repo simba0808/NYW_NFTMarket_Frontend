@@ -11,7 +11,10 @@ const ToggleProfile = () => {
   const [active, setActive] = useState(false);
 
   const handleOutsideClick = (event: MouseEvent) => {
-    if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
+    if (
+      profileRef.current &&
+      !profileRef.current.contains(event.target as Node)
+    ) {
       setActive(false);
     }
   };
@@ -21,14 +24,14 @@ const ToggleProfile = () => {
 
     return () => {
       document.removeEventListener("mousedown", handleOutsideClick);
-    }
-  }, [handleOutsideClick])
+    };
+  }, [handleOutsideClick]);
 
   return (
     <div className="relative">
-      <div 
+      <div
         ref={profileRef}
-        className={active? "block absolute top-[50px] right-0" : "hidden"}
+        className={active ? "block absolute top-[50px] right-0" : "hidden"}
       >
         <ProfileMenu />
       </div>
@@ -37,11 +40,10 @@ const ToggleProfile = () => {
         className="p-2 rounded-full hover:cursor-pointer hover:opacity-30 transition-opacity duration-500"
         onClick={() => setActive(!active)}
       >
-        <Icon icon="teenyicons:user-circle-outline" className="w-10 h-10" />
+        <Icon icon="teenyicons:user-circle-outline" className="w-6 h-6" />
       </div>
-      
     </div>
   );
-}
+};
 
 export default ToggleProfile;

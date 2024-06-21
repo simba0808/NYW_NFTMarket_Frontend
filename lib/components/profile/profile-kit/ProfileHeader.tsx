@@ -1,12 +1,22 @@
 "use client";
 import { useCallback, useState } from "react";
 import { useAccount } from "wagmi";
-import {Icon} from "@iconify/react";
+import { Icon } from "@iconify/react";
 import { twMerge } from "tailwind-merge";
 
 import EthereumIcon from "@/public/ethereum.svg";
 
-export const CopyLink = ({className, url}: {className?:string; url: string}) => {
+export function shortenAddress(address: string) {
+  return `${address?.slice(0, 6)}...${address?.slice(-4)}`;
+}
+
+export const CopyLink = ({
+  className,
+  url,
+}: {
+  className?: string;
+  url: string;
+}) => {
   const [copied, setCopied] = useState(false);
 
   const onClickHandler = useCallback(() => {
@@ -14,42 +24,30 @@ export const CopyLink = ({className, url}: {className?:string; url: string}) => 
     setCopied(true);
   }, [url]);
 
-  function shortenAddress(address: string) {
-    return `${address.slice(0, 6)}...${address.slice(-4)}`;
-  }
-  
-  const AddressDisplay = ({address}: {address: string}) => {
-    return (
-      <span>{shortenAddress(address)}</span>
-    );
-  }
-  
+  const AddressDisplay = ({ address }: { address: string }) => {
+    return <span>{address && shortenAddress(address)}</span>;
+  };
+
   return (
-    <div 
-      className={twMerge(
-        "flex gap-1 items-center",
-        className
-      )} 
+    <div
+      className={twMerge("flex gap-1 items-center", className)}
       onClick={onClickHandler}
     >
-        {
-          copied ? 
-            <Icon
-              className="pointer-events-none text-2xl text-default-400"
-              icon="mingcute:check-fill"
-            /> :
-            <Icon
-              className="pointer-events-none text-2xl text-default-400"
-              icon="fluent:copy-24-filled"
-            />
-        }
-        {
-          url && <AddressDisplay address={url} />
-        }
-        
-      </div>
+      {copied ? (
+        <Icon
+          className="pointer-events-none text-2xl text-default-400"
+          icon="mingcute:check-fill"
+        />
+      ) : (
+        <Icon
+          className="pointer-events-none text-2xl text-default-400"
+          icon="fluent:copy-24-filled"
+        />
+      )}
+      {url && <AddressDisplay address={url} />}
+    </div>
   );
-}
+};
 
 export default function ProfileHeader() {
   const { address } = useAccount();
