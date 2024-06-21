@@ -1,7 +1,6 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
 import { useAccount } from "wagmi";
-import { useRouter } from "next/navigation";
 import { Image } from "@nextui-org/react";
 import Box from "@mui/material/Box";
 import ImageList from "@mui/material/ImageList";

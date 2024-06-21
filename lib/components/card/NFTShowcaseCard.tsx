@@ -1,3 +1,5 @@
+"use client";
+
 import { Card, Image } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 
