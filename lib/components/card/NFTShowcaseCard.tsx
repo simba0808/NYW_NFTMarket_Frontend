@@ -27,7 +27,6 @@ const NFTShowcaseCard: FC<Props> = ({ asset, hash }) => {
         className="hover:cursor-pointer"
         onClick={() => router.push(`/nft/${hash}`)}
         onLoad={() => setLoading(true)}
-        isLoading={!isLoading}
       />
     </Card>
   );
