@@ -1,4 +1,5 @@
-import { useState, type FC } from "react";
+"use client";
+import { useEffect, useState, type FC } from "react";
 import { useAccount } from "wagmi";
 import {
   Accordion,
@@ -50,6 +51,18 @@ const NFTModal: FC<Props> = ({ type, isOpen, onClose, data }) => {
 
   const customToast = useToast();
 
+  useEffect(() => {
+    if (isListSuccess) {
+      customToast("success", "Successfully listed");
+    }
+  }, [isListSuccess]);
+
+  useEffect(() => {
+    if (isDeListSuccess) {
+      customToast("success", "Successfully delisted");
+    }
+  }, [isDeListSuccess]);
+
   const handleListNFT = async () => {
     if (data?.token_id === undefined || data?.token_id === null) {
       customToast("failed", "Invalid Token ID");
@@ -67,10 +80,9 @@ const NFTModal: FC<Props> = ({ type, isOpen, onClose, data }) => {
       );
 
       if (tx) {
+        await approveNFT(data?.token_id as number);
         setTimeout(async () => {
           if (tx) {
-            await approveNFT(data?.token_id as number);
-
             const response = await postServer("/nft/list", {
               tx,
               address: address as string,
@@ -177,6 +189,7 @@ const NFTModal: FC<Props> = ({ type, isOpen, onClose, data }) => {
                   placeholder="Insert Listing Price"
                   value={listPrice}
                   onChange={(e) => setListPrice(e.target.value)}
+                  startContent={<span>ETH</span>}
                   endContent={
                     <PrimaryButton
                       isLoading={isListLoading || isPendingList}

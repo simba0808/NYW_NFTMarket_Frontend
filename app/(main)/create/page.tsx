@@ -38,7 +38,7 @@ const CreateNFT = () => {
   const { isConnected, address } = useAccount();
 
   const customToast = useToast();
-  const { isMintLoading, isMintSuccess, mintNFT } = useNFTMint();
+  const { isPendingMint, isMintLoading, isMintSuccess, mintNFT } = useNFTMint();
 
   const [activeTab, setActiveTab] = useState<WorkingTabs>(WorkingTabs.Image);
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
@@ -233,10 +233,6 @@ const CreateNFT = () => {
                     isLoading={isGenerating}
                   />
                 </div>
-                <p className="text-center">Cost: 2 $cNYW</p>
-                <div className="py-2 bg-white/5 text-xs text-center rounded-md">
-                  You don't have enough $cNYW to create. Get More $cNYW
-                </div>
               </div>
             </div>
           </div>
@@ -320,7 +316,7 @@ const CreateNFT = () => {
                           <PrimaryButton
                             onClick={mintNow}
                             text="Mint Now"
-                            isLoading={isMintLoading}
+                            isLoading={isPendingMint || isMintLoading}
                           />
                         }
                       />

@@ -36,7 +36,8 @@ export default function HeroSection() {
           <div className="flex-[50%] flex items-center">
             <div>
               <h2 className="">
-                Diversity & Technology in <p className="lg:">New York World</p>
+                Diversity & Technology in{" "}
+                <p className="gradient">New York World</p>
               </h2>
               <p className="mt-4 mb-8">
                 Ever dreamt of being part of the New York World? NYW, the bridge

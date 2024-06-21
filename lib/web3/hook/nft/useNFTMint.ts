@@ -4,11 +4,14 @@ import { ContractFunctionExecutionError } from "viem";
 
 import NFTABI from "@/lib/web3/contracts/NYWNFT.json";
 
-const MARKET_ADDRESS = process.env.NEXT_PUBLIC_MARKET_ADDRESS as `0x${string}`;
 const NFT_ADDRESS = process.env.NEXT_PUBLIC_NFT_ADDRESS as `0x${string}`;
 
 const useNFTMint = () => {
-  const { data: mintData, writeContractAsync } = useWriteContract();
+  const {
+    data: mintData,
+    isPending: isPendingMint,
+    writeContractAsync,
+  } = useWriteContract();
 
   const { isLoading, isSuccess } = useWaitForTransactionReceipt({
     hash: mintData,
@@ -40,6 +43,7 @@ const useNFTMint = () => {
 
   return {
     mintNFT,
+    isPendingMint,
     isMintLoading: isLoading,
     isMintSuccess: isSuccess,
   };

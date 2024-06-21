@@ -40,7 +40,8 @@
 
   ::-webkit-scrollbar-track {
     background-color: transparent;
-}
+    
+  }
 
   body {
     font-family: 'Inter', sans-serif;
@@ -54,14 +55,8 @@
   h2 p {
     font-size: 84px;
     line-height: 100%;
-    color: #15BFFD;
     font-weight: 800;
-    text-shadow: 
-      1px  1px     #fff, 
-      -1px  1px     #fff, 
-      1px -1px     #fff, 
-      -1px -1px     #fff,
-      1px  1px 5px #555;
+    color: #15BFFD;
   }
 
   h3 {
@@ -75,6 +70,34 @@
     cursor: pointer;
     font-size: 105%;
     font-weight: 600  ;
+  }
+
+  .gradient {
+    background: linear-gradient(
+      to right,
+      #82a3d4 20%,
+      #5c67cf 40%,
+      #2d2d8b 60%,
+      #15BFFD 80%
+    );
+
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    width: max-content;
+    /* text-fill-color: transparent; */
+    background-position: 50% 50%;
+    background-size: 500% auto;
+    animation: textShine 5s ease-in-out infinite;
+  }
+
+  @keyframes textShine {
+    0% {
+      background-position: 0% 50%;
+    }
+    100% {
+      background-position: 100% 50%;
+    }
   }
 
   @media (max-width: 1024px) {

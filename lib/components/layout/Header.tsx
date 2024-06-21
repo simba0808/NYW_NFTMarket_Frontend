@@ -1,6 +1,7 @@
 "use client";
 import { useCallback, useMemo } from "react";
 import { useSession } from "next-auth/react";
+import { Image } from "@nextui-org/react";
 import { usePathname, useRouter } from "next/navigation";
 
 import {
@@ -13,16 +14,10 @@ import {
   NavbarMenuToggle,
   Link,
   Button,
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem,
   Popover,
   PopoverContent,
   PopoverTrigger,
-  Avatar,
   Badge,
-  Input,
 } from "@nextui-org/react";
 import { Icon } from "@iconify/react";
 
@@ -42,7 +37,8 @@ export default function Header() {
 
   const logoElement = useMemo(() => {
     return (
-      <img
+      <Image
+        classNames={{ img: "w-16 h-16" }}
         src="/logo.png"
         className="hover:cursor-pointer"
         onClick={onLogo}
@@ -70,11 +66,12 @@ export default function Header() {
   );
 
   return (
-    <div className="w-full">
+    <div className="px-4 z-50 w-full fixed top-4">
       <Navbar
         classNames={{
-          base: "lg:bg-transparent lg:backdrop-filter-none",
-          wrapper: "px-4 sm:px-6",
+          base: "bg-transparent backdrop-filter-none",
+          wrapper:
+            "px-4 sm:px-6 bg-white/15 border-1 border-white/30 backdrop-blur-xl backdrop-saturate-150 rounded-full",
           item: "data-[active=true]:text-primary max-w-[1536px]",
         }}
         height="100px"
@@ -85,15 +82,15 @@ export default function Header() {
           {logoElement}
         </NavbarBrand>
         <NavbarContent
-          className="ml-4 hidden h-12 w-full max-w-fit gap-8 rounded-full bg-white/15 px-8  sm:flex"
+          className="ml-4 hidden h-12 w-full max-w-fit gap-8 rounded-full px-8 sm:flex"
           justify="start"
         >
-          <NavbarItem>
+          <NavbarItem isActive={path.includes("explore") ? true : false}>
             <Link className="flex gap-2 text-inherit" href="/explore">
               Explorer NFT
             </Link>
           </NavbarItem>
-          <NavbarItem isActive>
+          <NavbarItem isActive={path.includes("create") ? true : false}>
             <Link
               aria-current="page"
               className="flex gap-2 text-inherit"
@@ -102,46 +99,26 @@ export default function Header() {
               Create NFT
             </Link>
           </NavbarItem>
-          <NavbarItem>
+          <NavbarItem isActive={path.includes("earn") ? true : false}>
             <Link className="flex gap-2 text-inherit" href="/earn">
               EARN
             </Link>
           </NavbarItem>
-          <NavbarItem>
+          <NavbarItem isActive={path.includes("campaign") ? true : false}>
             <Link className="flex gap-2 text-inherit" href="/campaigns">
               Campaigns
             </Link>
           </NavbarItem>
         </NavbarContent>
         <NavbarContent
-          className="ml-auto flex h-12 max-w-fit items-center gap-0 rounded-full p-0 lg:bg-content2 lg:px-1 lg:dark:bg-content1"
+          className="ml-auto flex justify-center items-center h-12 max-w-fit gap-0 rounded-full p-0 px-2 bg-white/30 dark:bg-white/30"
           justify="end"
         >
-          {/* Search */}
-          <NavbarItem className="mr-2 hidden lg:flex">
-            <Input
-              aria-label="Search"
-              classNames={{
-                inputWrapper:
-                  "bg-default-100 group-data-[hover=true]:bg-default-50 group-data-[focus=true]:bg-100",
-              }}
-              labelPlacement="outside"
-              placeholder="Search..."
-              radius="full"
-              startContent={
-                <Icon
-                  className="text-default-500"
-                  icon="solar:magnifer-linear"
-                  width={20}
-                />
-              }
-            />
-          </NavbarItem>
           {/* Mobile search */}
           <NavbarItem className="lg:hidden">
             <Button isIconOnly radius="full" variant="light">
               <Icon
-                className="text-default-500"
+                className="text-white"
                 icon="solar:magnifer-linear"
                 width={20}
               />
@@ -150,21 +127,7 @@ export default function Header() {
           {/* Theme change */}
           <NavbarItem className="hidden lg:flex">
             <Button isIconOnly radius="full" variant="light">
-              <Icon
-                className="text-default-500"
-                icon="solar:sun-linear"
-                width={24}
-              />
-            </Button>
-          </NavbarItem>
-          {/* Settings */}
-          <NavbarItem className="hidden lg:flex">
-            <Button isIconOnly radius="full" variant="light">
-              <Icon
-                className="text-default-500"
-                icon="solar:settings-linear"
-                width={24}
-              />
+              <Icon className="text-white" icon="solar:sun-linear" width={24} />
             </Button>
           </NavbarItem>
           {/* Notifications */}
@@ -185,7 +148,7 @@ export default function Header() {
                     size="md"
                   >
                     <Icon
-                      className="text-default-500"
+                      className="text-white"
                       icon="solar:bell-linear"
                       width={22}
                     />
@@ -198,7 +161,9 @@ export default function Header() {
             </Popover>
           </NavbarItem>
           {/* User Menu */}
-          <NavbarItem className="px-2">{headerTrailing}</NavbarItem>
+          <NavbarItem className="flex items-center">
+            {headerTrailing}
+          </NavbarItem>
         </NavbarContent>
 
         {/* Mobile Menu */}
