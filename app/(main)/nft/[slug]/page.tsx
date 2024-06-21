@@ -155,7 +155,8 @@ export default function NFTDetailView({
   const { address } = useAccount();
   const customToast = useToast();
   const { likeNFT } = useLike();
-  const { isBuyNFTSuccess, buyNFT } = useNFTBuy();
+  const { isBuyNFTLoading, isBuyNFTPending, isBuyNFTSuccess, buyNFT } =
+    useNFTBuy();
 
   const fetchDetailedData = useCallback(async () => {
     try {
@@ -169,6 +170,12 @@ export default function NFTDetailView({
   useEffect(() => {
     fetchDetailedData();
   }, [params.slug]);
+
+  useEffect(() => {
+    if (isBuyNFTSuccess) {
+      customToast("success", "Successfully Buy NFT");
+    }
+  }, [isBuyNFTSuccess]);
 
   // const handleApprove = async () => {
   //   if (detailedNFTData?.token_id !== undefined) {
@@ -224,14 +231,9 @@ export default function NFTDetailView({
                 <img src="/asset/avatar.png" alt="Not Found" />
                 <div>
                   <p>{detailedNFTData?.creator}</p>
-                  <p>User ID</p>
                 </div>
               </div>
               <div className="flex items-center gap-3 lg:gap-6">
-                <span className="flex gap-1">
-                  <FireIcon />
-                  <span>10</span>
-                </span>
                 <span className="flex items-center gap-1">
                   <button onClick={handleLike}>
                     <LikeIcon />
@@ -260,6 +262,7 @@ export default function NFTDetailView({
             <div className="mt-8">
               <PrimaryButton
                 className="w-[200px]"
+                isLoading={isBuyNFTLoading || isBuyNFTPending}
                 text="Purchase NFT"
                 onClick={handlePurchase}
               />

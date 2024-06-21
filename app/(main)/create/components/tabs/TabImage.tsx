@@ -49,27 +49,6 @@ export default function TabImage({
     <div className="prompt-container py-6 divide-y-1 divide-white/10">
       <div>
         <div className="mb-5">
-          <p className="mb-1">Choose a model</p>
-          <Select
-            variant="bordered"
-            aria-label="select"
-            placeholder="Select a model"
-            labelPlacement="outside"
-            classNames={{
-              base: "max-w-xs",
-              trigger: "h-12",
-            }}
-          >
-            {models.map((model) => (
-              <SelectItem key={model.key}>{model.label}</SelectItem>
-            ))}
-          </Select>
-        </div>
-        <div className="mb-5">
-          <p className="mb-1">Image Upload</p>
-          <ImageUploader />
-        </div>
-        <div className="mb-5">
           <div className="mb-1 flex justify-between">
             <p>Image Prompt</p>
             <p>Random Prompt</p>
