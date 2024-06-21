@@ -18,11 +18,12 @@ import FireIcon from "@/public/icon/fire.svg";
 import LikeIcon from "@/public/icon/like.svg";
 import FollowIcon from "@/public/icon/follow.svg";
 import { shortenAddress } from "@/lib/components/profile/profile-kit/ProfileHeader";
-import { fetchServer } from "@/lib/net/fetch/fetch";
+import { fetchServer, postServer } from "@/lib/net/fetch/fetch";
 
 import useToast from "@/lib/hooks/toast/useToast";
 import useComments from "@/lib/hooks/nft/useComments";
 import useLike from "@/lib/hooks/nft/useLike";
+import useNFTBuy from "@/lib/web3/hook/nft/useNFTBuy";
 import usePagination from "@/lib/hooks/nft/usePagination";
 
 type DetailedNFTData = {
@@ -34,6 +35,8 @@ type DetailedNFTData = {
   prompt?: string;
   created_date?: string;
   likes?: number;
+  price?: number;
+  royalty?: number;
 };
 
 const CommentCard = ({
@@ -152,17 +155,50 @@ export default function NFTDetailView({
   const { address } = useAccount();
   const customToast = useToast();
   const { likeNFT } = useLike();
+  const { isBuyNFTSuccess, buyNFT } = useNFTBuy();
 
   const fetchDetailedData = useCallback(async () => {
     try {
       const res: DetailedNFTData = await fetchServer(`/nft/${hash}`);
       setDetailedNFTData(res);
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
   }, [params.slug]);
 
   useEffect(() => {
     fetchDetailedData();
   }, [params.slug]);
+
+  // const handleApprove = async () => {
+  //   if (detailedNFTData?.token_id !== undefined) {
+  //     const approveRes = await approveNFT(detailedNFTData?.token_id);
+  //   } else {
+  //     customToast("failed", "NFT is not available");
+  //     return;
+  //   }
+  // };
+
+  const handlePurchase = async () => {
+    try {
+      const tx = await buyNFT(
+        detailedNFTData?.token_id as number,
+        detailedNFTData?.price as number
+      );
+
+      if (tx) {
+        setTimeout(async () => {
+          const reponse = await postServer(`/nft/${hash}/buy`, {
+            tx,
+            address,
+            token_id: detailedNFTData?.token_id,
+          });
+        }, 30000);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const handleLike = () => {
     likeNFT(hash, address as string);
@@ -210,15 +246,23 @@ export default function NFTDetailView({
             <div className="flex flex-col sm:flex-row mt-6 gap-y-2">
               <div className="lg:w-[30%]">
                 <p>Current Price</p>
-                <p className="text-2xl font-semibold">{10} ETH</p>
+                <p className="text-2xl font-semibold">
+                  {detailedNFTData?.price} ETH
+                </p>
               </div>
               <div>
-                <p>Auction end in</p>
-                <p className="text-2xl font-semibold">00d 00h 00m 00s</p>
+                <p>Loyalty Fee</p>
+                <p className="text-2xl font-semibold">
+                  {detailedNFTData?.royalty} %
+                </p>
               </div>
             </div>
             <div className="mt-8">
-              <PrimaryButton className="w-[200px]" text="Purchase NFT" />
+              <PrimaryButton
+                className="w-[200px]"
+                text="Purchase NFT"
+                onClick={handlePurchase}
+              />
             </div>
           </div>
         </div>

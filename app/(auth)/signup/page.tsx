@@ -1,8 +1,15 @@
 "use client";
 
 import React from "react";
-import {Button, Input, Link, Divider, User, Checkbox} from "@nextui-org/react";
-import {Icon} from "@iconify/react";
+import {
+  Button,
+  Input,
+  Link,
+  Divider,
+  User,
+  Checkbox,
+} from "@nextui-org/react";
+import { Icon } from "@iconify/react";
 
 import PrimaryButton from "@/lib/components/button/PrimaryButton";
 import WalletIcon from "@/public/icon/wallet.svg";
@@ -13,17 +20,21 @@ export default function Component() {
   const toggleVisibility = () => setIsVisible(!isVisible);
 
   return (
-    <div className="pt-[100px] relative flex h-screen w-screen">
-
+    <div className="auth__container relative flex h-screen w-screen">
       {/* Sign Up Form */}
       <div className="flex w-full items-center justify-center lg:w-1/2">
         <div className="flex w-full max-w-sm flex-col items-center gap-4 p-4">
           <div className="w-full text-left">
             <p className="pb-2 text-xl font-medium">Create Account</p>
-            <p className="text-small text-default-500">Sign up for a new account to get started</p>
+            <p className="text-small text-default-500">
+              Sign up for a new account to get started
+            </p>
           </div>
 
-          <form className="flex w-full flex-col gap-3" onSubmit={(e) => e.preventDefault()}>
+          <form
+            className="flex w-full flex-col gap-3"
+            onSubmit={(e) => e.preventDefault()}
+          >
             <Input
               isRequired
               label="Email Address"
@@ -90,7 +101,9 @@ export default function Component() {
               Sign Up with Google
             </Button>
             <Button
-              startContent={<WalletIcon className="text-default-500" width={24} />}
+              startContent={
+                <WalletIcon className="text-default-500" width={24} />
+              }
               variant="bordered"
             >
               Sign Up with Wallet
@@ -115,8 +128,7 @@ export default function Component() {
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
-      >
-      </div>
+      ></div>
     </div>
   );
 }
