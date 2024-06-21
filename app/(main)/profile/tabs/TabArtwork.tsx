@@ -13,7 +13,7 @@ type ArtworkData = {
   image_hash: string;
 };
 
-const TabArtwork = () => {
+const TabArtwork = ({ cols }: { cols: number }) => {
   const [artworks, setArtworks] = useState<ArtworkData[]>([]);
   const router = useRouter();
   const { address } = useAccount();
@@ -34,7 +34,7 @@ const TabArtwork = () => {
   return (
     <div className="flex flex-wrap">
       <Box sx={{ width: "100%", overflowY: "none" }}>
-        <ImageList variant="standard" cols={4} gap={10}>
+        <ImageList variant="masonry" cols={cols} gap={10}>
           {artworks.map((artwork, index) => {
             return (
               <Image

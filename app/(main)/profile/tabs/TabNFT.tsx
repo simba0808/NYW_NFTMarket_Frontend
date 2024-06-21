@@ -8,17 +8,27 @@ import ImageList from "@mui/material/ImageList";
 
 import { postServer } from "@/lib/net/fetch/fetch";
 
-type NFTData = {
+export type NFTData = {
   token_id: number;
+  token_name: string;
   metadata_hash: string;
   owner: string;
   creator: string;
   asset_url: string;
   asset_hash: string;
+  prompt: string;
 };
 
-const TabNFT = () => {
-  const router = useRouter();
+const TabNFT = ({
+  cols,
+  setSelected,
+  open,
+}: {
+  cols: number;
+  setSelected: (type: NFTData | undefined) => void;
+  open: () => void;
+}) => {
+  //const router = useRouter();
   const { address, isConnected } = useAccount();
   const [myNFTs, setMyNFTs] = useState<NFTData[]>([]);
 
@@ -41,10 +51,15 @@ const TabNFT = () => {
     }
   }, [address, isConnected]);
 
+  const handleClick = (id: number) => {
+    setSelected(myNFTs.find((nft) => nft.token_id === id));
+    open();
+  };
+
   return (
     <div className="flex flex-wrap">
       <Box sx={{ width: "100%", overflowY: "none" }}>
-        <ImageList variant="standard" cols={5} gap={10}>
+        <ImageList variant="masonry" cols={cols} gap={10}>
           {myNFTs.map((nft, index) => {
             return (
               <Image
@@ -53,7 +68,10 @@ const TabNFT = () => {
                 isZoomed
                 alt={`NFT ${index}`}
                 className="py-1 rounded-lg hover:cursor-pointer"
-                onClick={() => router.push(`/nft/${nft.asset_hash}`)}
+                onClick={
+                  //() => router.push(`/nft/${nft.asset_hash}`)
+                  () => handleClick(nft.token_id)
+                }
               />
             );
           })}
