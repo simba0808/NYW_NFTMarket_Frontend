@@ -16,7 +16,7 @@ export default function ShowcaseSection() {
           {ShowcaseData.map((item, index) => {
             return (
               <NFTShowcaseCard
-                asset={item.asset}
+                asset={`/asset/${item.asset}`}
                 avatar={item.avatar}
                 nftName={item.nftName}
                 nftOwner={item.nftOwner}

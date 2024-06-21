@@ -23,6 +23,7 @@ export const fetchServer = async (
 
   const headers: HeadersInit = {
     "Content-Type": "application/json",
+    "ngrok-skip-browser-warning": "test",
   };
 
   const token = getLocalStorageItem("token");
