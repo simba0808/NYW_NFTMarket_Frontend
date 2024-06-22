@@ -23,6 +23,7 @@ export const fetchServer = async (
 
   const headers: HeadersInit = {
     "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
     "ngrok-skip-browser-warning": "test",
   };
 
