@@ -19,7 +19,11 @@ const NFTShowcaseCard: FC<Props> = ({ asset, hash }) => {
   const [isLoading, setLoading] = useState(false);
 
   return (
-    <Card isFooterBlurred radius="lg" className="border-none p-2 bg-white/5 ">
+    <Card
+      isFooterBlurred
+      radius="lg"
+      className="flex justify-center items-center border-none p-2 bg-white/5 "
+    >
       <Image
         alt="Woman listing to music"
         src={asset}

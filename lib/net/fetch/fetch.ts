@@ -18,7 +18,7 @@ export const fetchServer = async (
   method = "GET"
 ) => {
   if (!path.startsWith("http")) {
-    path = urlJoin(process.env.NEXT_PUBLIC_API_BASE_URL!, path);
+    path = urlJoin(process.env.NEXT_PUBLIC_BASE_URL!, path);
   }
 
   const headers: HeadersInit = {
