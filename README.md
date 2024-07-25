@@ -2,7 +2,10 @@
 
 This is a NFT Marketplace powered by Generative AI for creating NFT assets using Stable Diffusion, DALL-E and Midjourney.
 
-[![Watch the video](https://raw.githubusercontent.com/simba0808/NYW_NFTMarket_Frontend/main/readme/thumbnail.png)](https://raw.githubusercontent.com/simba0808/NYW_NFTMarket_Frontend/main/readme/demo.mp4)
+
+
+https://github.com/user-attachments/assets/79923f0a-3a58-43a0-b217-c884c5da3007
+
 
 ## Technologies Used
 
