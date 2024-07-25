@@ -260,12 +260,15 @@ export default function NFTDetailView({
               </div>
             </div>
             <div className="mt-8">
-              <PrimaryButton
-                className="w-[200px]"
-                isLoading={isBuyNFTLoading || isBuyNFTPending}
-                text="Purchase NFT"
-                onClick={handlePurchase}
-              />
+              {address?.toLocaleLowerCase !=
+                detailedNFTData?.owner?.toLocaleLowerCase() && (
+                <PrimaryButton
+                  className="w-[200px]"
+                  isLoading={isBuyNFTLoading || isBuyNFTPending}
+                  text="Purchase NFT"
+                  onClick={handlePurchase}
+                />
+              )}
             </div>
           </div>
         </div>
