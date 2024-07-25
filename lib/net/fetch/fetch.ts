@@ -62,7 +62,7 @@ export const putServer = (
   return fetchServer(path, { body: JSON.stringify(body), ...params }, method);
 };
 
-export const postServer = (
+export const postServer = ( 
   path: string,
   body?: Record<string, unknown>,
   params?: Record<string, unknown>
