@@ -1,28 +1,30 @@
-# Next.js & NextUI Template
+# Gen AI NFT Marketplace
 
-This is a template for creating applications using Next.js 14 (app directory) and NextUI (v2).
+This is a NFT Marketplace powered by Generative AI for creating NFT assets using Stable Diffusion, DALL-E and Midjourney.
 
-[Try it on CodeSandbox](https://githubbox.com/nextui-org/next-app-template)
+[![Watch the video](https://raw.githubusercontent.com/simba0808/NYW_NFTMarket_Frontend/main/readme/thumbnail.png)](https://raw.githubusercontent.com/simba0808/NYW_NFTMarket_Frontend/main/readme/demo.mp4)
 
 ## Technologies Used
+
+-Frontend
 
 - [Next.js 14](https://nextjs.org/docs/getting-started)
 - [NextUI v2](https://nextui.org/)
 - [Tailwind CSS](https://tailwindcss.com/)
-- [Tailwind Variants](https://tailwind-variants.org)
 - [TypeScript](https://www.typescriptlang.org/)
 - [Framer Motion](https://www.framer.com/motion/)
-- [next-themes](https://github.com/pacocoursey/next-themes)
 
-## How to Use
+-Backend
 
-### Use the template with create-next-app
+- [Node.js](https://nodejs.org/)
+- [Express.js](https://expressjs.com/)
+- [postgres](https://www.postgresql.org/)
+- [subgraph](https://thegraph.com/)
 
-To create a new project based on this template using `create-next-app`, run the following command:
+-Smart Contract
 
-```bash
-npx create-next-app -e https://github.com/nextui-org/next-app-template
-```
+- [solidity](https://docs.soliditylang.org/en/v0.8.17/)
+- [hardhat](https://hardhat.org/)
 
 ### Install dependencies
 
@@ -50,4 +52,4 @@ After modifying the `.npmrc` file, you need to run `pnpm install` again to ensur
 
 ## License
 
-Licensed under the [MIT license](https://github.com/nextui-org/next-app-template/blob/main/LICENSE).
+Licensed under the [Simba](https://t.me/xcrypto1112).
